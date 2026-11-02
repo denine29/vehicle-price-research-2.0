@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-30",
+ "generated": "2026-11-02",
  "source": "references/sites.md",
  "markets": {
   "be": {
@@ -280,9 +280,9 @@
    ],
    "sections": [
     {
-     "title": "Mercedes-Benz",
+     "title": "Mercedes-Benz（NZ 新西兰：Akamai 按数据中心 IP 拦，仅部分 overview 页有价）",
      "srcLine": 9,
-     "sha256": "21a3d4eba3e17da9193b9f4e3221b9ab5119c32e22b079ccf4afc1dea2982412"
+     "sha256": "b750799ab435658f6734d4686261a33b642552dcda20fd89b8379bf0b29e136a"
     },
     {
      "title": "Aston Martin（官方不公布 MSRP → 按 `官网无价格` 规则出表）",

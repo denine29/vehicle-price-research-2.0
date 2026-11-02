@@ -25,7 +25,7 @@ node scripts/verify_xlsx.js out.xlsx rows.json --basis year_basis.json --money e
 
 | 文件 | 市场 | 条数 | 粒度 | 专门要你看什么 |
 |---|---|---|---|---|
-| `legacy/Mercedes-Benz_UK_官网价_20261020.xlsx` | 英国 | **403** | 变体级 | **规模上限长什么样**；同一车系燃油版与纯电版**同名**时怎么拆（`CLA` vs `CLA Electric`、`GLC` vs `GLC Electric`、`G-Class` vs `G-Class Electric`）；PHEV 多达 74 条 |
+| `legacy/Mercedes-Benz_UK_官网价_20261020.xlsx` | 英国 | 403 | 变体级 | **规模上限长什么样**；同一车系燃油版与纯电版**同名**时怎么拆（`CLA` vs `CLA Electric`、`GLC` vs `GLC Electric`、`G-Class` vs `G-Class Electric`）；PHEV 多达 74 条 |
 | `legacy/Skoda_UK_官网价_20261020.xlsx` | 英国 | 133 | 变体级 | **年款可以全量明确**：整批 `MY2027`；汽油 67 / 纯电 26 / 柴油 21 / **轻混 15** / 插混 4，是「五种动力并存」的典型 |
 | `legacy/Ford_UK_官网价_20261022.xlsx` | 英国 | 129 | 变体级 | **48V 轻混必须归 MHEV 不是 HEV**（型号名写 `1.0L EcoBoost Hybrid (mHEV)`，车系叫 "Hybrid SUV"，但归类是 MHEV）；官方 PDF 里带 `MY27` |
 | `legacy/Peugeot_UK_官网价_20261021.xlsx` | 英国 | 109 | 变体级 | **纯电/插混/轻混/汽油/柴油五类混排**且条数均衡；型号名里把 `TURBO 100` `ELECTRIC 51kWh 156` `HYBRID 145` 这类动力标识**原样并入** |

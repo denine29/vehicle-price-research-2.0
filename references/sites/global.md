@@ -6,7 +6,7 @@
 
 ---
 
-### Mercedes-Benz
+### Mercedes-Benz（NZ 新西兰：Akamai 按数据中心 IP 拦，仅部分 overview 页有价）
 
 | 项 | 内容 |
 |---|---|
