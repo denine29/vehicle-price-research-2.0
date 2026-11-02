@@ -1,0 +1,563 @@
+{
+ "generated": "2026-10-30",
+ "source": "references/sites.md",
+ "markets": {
+  "be": {
+   "file": "sites/be.md",
+   "count": 11,
+   "brands": [
+    "CUPRA",
+    "KGM / KG Mobility",
+    "Citroën",
+    "Škoda",
+    "Volvo",
+    "SEAT",
+    "Hyundai",
+    "Mitsubishi",
+    "MG",
+    "Maxus"
+   ],
+   "sections": [
+    {
+     "title": "CUPRA（BE 比利时）",
+     "srcLine": 9,
+     "sha256": "f16a0ab04c97903a88a4c60730b4d5ea34e00660baa0a161c6b723d93e7a83f2"
+    },
+    {
+     "title": "KGM / KG Mobility（BE 比利时 `www.kgm.be`：完全开放，Next.js `__NEXT_DATA__` 直读）✅",
+     "srcLine": 15,
+     "sha256": "c2fb89003ccd57e91a5e40948509dd85ecf86a9330b1c1007ebefd89d919b3eb"
+    },
+    {
+     "title": "Citroën（BE 比利时 `www.citroen.be/nl`：Akamai 全域封 curl，但 sccf 静态价格库可直接读）✅",
+     "srcLine": 74,
+     "sha256": "dfc678f0a6674978857182e48c8526be8912c841ee4e8cbd8cf8e1204503fc56"
+    },
+    {
+     "title": "Škoda（BE 比利时 `nl.skoda.be`：配置器 API 逆出，权威目录价）",
+     "srcLine": 144,
+     "sha256": "bd923b4ec044846a95824f253e9d2fb801adac473dbe850dc4db648c3a0ab9f0"
+    },
+    {
+     "title": "Volvo（BE 比利时 `volvocars.com/nl-be`：Akamai 拦 headless，必须 xvfb + headed Chromium）",
+     "srcLine": 222,
+     "sha256": "341fea7c544b6d3608ebe9179183bb39aa5cc6a8443427194711f54bc5e9dab3"
+    },
+    {
+     "title": "SEAT（BE 比利时 `www.seat.be/fr`：curl 全 403，但**真机 Chrome 可采**）✅",
+     "srcLine": 521,
+     "sha256": "deb54606af3ccd91c9988bf716f12abb19819e4b17486b5e596e75c5ff95b423"
+    },
+    {
+     "title": "CUPRA（BE 比利时 `www.cupra.be/fr`：完全可访问，官方 API 直连）✅",
+     "srcLine": 609,
+     "sha256": "b81f563d54dfec83bfc958095bae79b94dead14835dbf66c9034c91596f47d0d"
+    },
+    {
+     "title": "Hyundai（BE 比利时 `www.hyundai.com/be/nl.html`：**页面内 fetch 可打通 PAPI**，1 车系 1 请求拿全量）✅",
+     "srcLine": 676,
+     "sha256": "725b2658dddf206fdfce46732b40747576ae1dd65213a551228e494729829dd2"
+    },
+    {
+     "title": "Mitsubishi BE（比利时 `www.mitsubishi-motors.be/nl`：**mipulse GraphQL APQ，价格藏在配置器摘要 HTML 里**）✅",
+     "srcLine": 830,
+     "sha256": "45591465bcd76eea2d9ab69f5ded03c6fa86cca5b51a569857fa757a36aff3b8"
+    },
+    {
+     "title": "MG BE（比利时 `www.mgmotor.be/nl`：**Craft CMS + Alpine，配置器 HTML 内嵌产品 JSON**）✅",
+     "srcLine": 841,
+     "sha256": "c1f30664c68ee9408fbdde799450e67219c81819c9a14556a6e07e1770ae9dfd"
+    },
+    {
+     "title": "Maxus BE（比利时 `www.maxusmotors.be/nl`：**Next.js `__NEXT_DATA__` 直读，价格字段最规整**）✅",
+     "srcLine": 852,
+     "sha256": "e5b1c213b960efc3f991b7da2096ae444c474b6823971f65fe14339a4b3e8521"
+    }
+   ]
+  },
+  "cl": {
+   "file": "sites/cl.md",
+   "count": 1,
+   "brands": [
+    "Opel"
+   ],
+   "sections": [
+    {
+     "title": "Opel（CL 智利：Stellantis，curl 被拦但 Playwright 可通）",
+     "srcLine": 9,
+     "sha256": "54c8c09930eaf147b51d7af4152dc40b1f81bbf3853973e5e066a806032aca3d"
+    }
+   ]
+  },
+  "de": {
+   "file": "sites/de.md",
+   "count": 18,
+   "brands": [
+    "DS",
+    "Alfa Romeo",
+    "Alpine",
+    "Dacia",
+    "INEOS",
+    "Jeep",
+    "Abarth",
+    "Audi",
+    "Aiways",
+    "Lucid",
+    "MINI",
+    "Polestar",
+    "VinFast",
+    "smart",
+    "ALPINA",
+    "Aston Martin",
+    "Elaris"
+   ],
+   "sections": [
+    {
+     "title": "DS DE（德国 `www.dsautomobiles.de`：**Akamai 封主站，configv3 API 直取全版本 PVC**）✅",
+     "srcLine": 9,
+     "sha256": "2a632c01ab086c959519188920e0ea345b31ddc308a534e3be4b3e4ed11bd008"
+    },
+    {
+     "title": "Alfa Romeo DE（德国 `www.alfaromeo.de`：**Stellantis Omnichannel 配置器，无 sccf、`ncs/retrieve` 不可重放 → UI 逐卡读「UPE des Herstellers ab Werk」**）✅",
+     "srcLine": 25,
+     "sha256": "566d408cc4d15eea36c9e192fa384e30ee4fe38d637dad554b7b3bc4dba83851"
+    },
+    {
+     "title": "Alpine DE（德国 `www.alpinecars.de`：**Renault rplug 配置器直取 SRP，curl 全通**）✅",
+     "srcLine": 48,
+     "sha256": "06ff790dda6da9d71c29706e5bebcb7c19c0d95e195a8814cde45f30579fe0c3"
+    },
+    {
+     "title": "Dacia DE（德国 `www.dacia.de`：**APP_STATE 内嵌全版本矩阵 + rplug PVC 双源**）✅",
+     "srcLine": 62,
+     "sha256": "81d6ee07ee55d60ad3de0839f3e6b54bc872c05907b5e4d8088386967f114118"
+    },
+    {
+     "title": "INEOS DE（德国 `ineosgrenadier.com/de/de`：**Next.js 站点 + 独立配置器主机，官方价目 PDF 一页可文本解析**）✅",
+     "srcLine": 76,
+     "sha256": "d74c03b85b0dad9c5cc33064b890244fbbb280db29ef02bba8bdfd9fa5268586"
+    },
+    {
+     "title": "Jeep DE（德国 `www.jeep.de`：**Akamai 封 curl，配置器 SPA 逐卡点取 + 官方价目 PDF 交叉校验**）⚠️ 需浏览器",
+     "srcLine": 93,
+     "sha256": "fa0c7108f7f90456b3083666e7a207e534aaead9c51aba1dfd85de8d1ac35901"
+    },
+    {
+     "title": "Abarth DE（德国 `www.abarth.de`：**Akamai 封 curl，浏览器配置器 + 官方价目 PDF 双源**）⚠️ 需浏览器",
+     "srcLine": 111,
+     "sha256": "753003e6de14e138bbdaa9b95eabef464493f7253526a4f77ec1b29d50b70065"
+    },
+    {
+     "title": "Audi DE（德国 `www.audi.de/de`：**Akamai 只封 `www.audi.de`，价格主机 `omnigraph.audi.com` 可 curl 直取**）✅",
+     "srcLine": 127,
+     "sha256": "74e77df2f1e67259011e709255fe4849b96d97e6180962f24215e98f76d34f84"
+    },
+    {
+     "title": "Aiways DE（德国 `ai-ways.eu/de`：**营销站，德国境内不发售、无德国价**）❌ 无数据",
+     "srcLine": 145,
+     "sha256": "71912c9c30c5b01e221f369c03698f562fb75f5fa6a882c815a886472cdb71db"
+    },
+    {
+     "title": "Lucid DE（德国 `lucidmotors.com/de-de`：**Next.js 服务端直出「Ab X €」，curl 可通**）✅",
+     "srcLine": 156,
+     "sha256": "8cda8e624795be89db36152917ba76c3b0f6fb52379edabf1fc59d906d5c39fd"
+    },
+    {
+     "title": "MINI DE（德国 `www.mini.de/de_DE`：**BMW Connext 前端渲染，Akamai 封 curl，只能浏览器逐页等渲染**）⚠️ 需浏览器",
+     "srcLine": 170,
+     "sha256": "fca86979cc39fe883921a656e200f6b5cdf32a75239671351fa53210a8eba477"
+    },
+    {
+     "title": "Polestar DE（德国 `www.polestar.com/de/`：**curl 被 302 跳 polestar.cn，真实浏览器完全正常**）✅ 需浏览器",
+     "srcLine": 183,
+     "sha256": "16b672b4a0c6dd346c994f9106412785ba209fff0dfc745678c8acf3ca036e50"
+    },
+    {
+     "title": "VinFast EU/DE（德国 `vinfastauto.eu/de`：**Cloudflare 托管挑战，curl 403，真实浏览器 10–15 s 放行**）⚠️ 需浏览器",
+     "srcLine": 200,
+     "sha256": "4bdcecba9db12c04888b60e4a2df8ff9d0e28c9c485175635c92fc952ef9f59b"
+    },
+    {
+     "title": "smart DE（德国 `de.smart.com/de/`：**Storyblok + SPA，价格藏在无鉴权 trpc BFF；BFF 是跨年款全量目录，在售要按 `latestModelYearFlag=true` 过滤**）✅",
+     "srcLine": 216,
+     "sha256": "8ee1838a100e7159cec14427935192013c74015af356928252551c828f00d0f6"
+    },
+    {
+     "title": "smart DE · 配置器逐线读价（`de.smart.com/de/customizer/?pn18=…`）—— BFF 拿不到时的交叉校验/兜底",
+     "srcLine": 241,
+     "sha256": "596d5d824cc4d8a21f3373d6c0089f5a23a1ac6c9bc584a1f7d7b715e6c49af8"
+    },
+    {
+     "title": "ALPINA DE（德国 `www.alpina.de`：**品牌站已退役，跳 BMW 品牌愿景页，无车型/价格**）❌ 无数据",
+     "srcLine": 263,
+     "sha256": "c93f340fa6de9919802ecdb87cc8be003794dc66e4260f8ba0057983b6f4bc33"
+    },
+    {
+     "title": "Aston Martin DE（德国 `www.astonmartin.com/de`：**官网/配置器全链路不公布价格 → 按规则出表，MSRP 填 `官网无价格`**）⚠️ 无价格出表",
+     "srcLine": 275,
+     "sha256": "f499cc000a97cf35e26f6fadd99619605d81fd0cd91b90320269443f843cac50"
+    },
+    {
+     "title": "Elaris DE（德国 `www.elaris.de` / 用户给的 `www.elaris.eu`：**品牌已破产，官网下线；elaris.eu 是 Wayback 回放且价格自相矛盾**）❌ 无数据",
+     "srcLine": 294,
+     "sha256": "4d0104cb904b77e0164c1ac68e09bdc1ea5c1aab67230c419c36ebc19900112a"
+    }
+   ]
+  },
+  "dk": {
+   "file": "sites/dk.md",
+   "count": 4,
+   "brands": [
+    "Citroën",
+    "CUPRA",
+    "MG",
+    "Nissan"
+   ],
+   "sections": [
+    {
+     "title": "Citroën（DK 丹麦 `www.citroen.dk`：主站通，但价格 API 在我方出口被路由阻断）❌",
+     "srcLine": 9,
+     "sha256": "b40ee70592f3bed90a192a64786d375851a2c669da2b6af50276e5d8c195e96d"
+    },
+    {
+     "title": "CUPRA（DK 丹麦 `www.cupraofficial.dk`：全站按 IP 封锁，无解）❌",
+     "srcLine": 48,
+     "sha256": "457d4de1ec11d79a961135f801945e3388bd5bb8725a25bf691e7e142e8a310e"
+    },
+    {
+     "title": "MG（DK 丹麦 `www.mgmotors.dk`：Cloudflare 但不拦，WordPress + 经销商配置器）✅",
+     "srcLine": 110,
+     "sha256": "ffc829f82010fe48f76c492b3a930cbf047414f6e80b9215641b2dae6d0ff9ad"
+    },
+    {
+     "title": "Nissan（DK 丹麦 `www.nissan.dk`：**采集失败，IP 级风控**）❌",
+     "srcLine": 150,
+     "sha256": "b1114c5be40fa7c4cde3b89aeac2683fee6d2a9be0d342d6d82053803e06e48f"
+    }
+   ]
+  },
+  "es": {
+   "file": "sites/es.md",
+   "count": 1,
+   "brands": [
+    "Audi"
+   ],
+   "sections": [
+    {
+     "title": "Audi（ES：官网全域 Akamai 封锁，走 Autopista 替代源）",
+     "srcLine": 9,
+     "sha256": "8a7e425bb8b5b71da031036c4b9c8994e06cd207ecda3a589e2688a3a4ca346a"
+    }
+   ]
+  },
+  "fr": {
+   "file": "sites/fr.md",
+   "count": 2,
+   "brands": [
+    "Citroën",
+    "Mitsubishi"
+   ],
+   "sections": [
+    {
+     "title": "Citroën（FR 法国 `www.citroen.fr` → `store.citroen.fr`：**GraphQL 可 curl 直连**，全量配置价格一次拿完）✅",
+     "srcLine": 9,
+     "sha256": "c8eca949aaded59dd4efca9df4dd48319cfc2cdfdd1ddea4aa7b337b3a811ff6"
+    },
+    {
+     "title": "Mitsubishi FR（法国 `www.mitsubishi-motors.fr`：**curl 445 空响应；WordPress/Elementor SSR，同源 fetch 取车型页 finition 价**）⚠️ 需浏览器",
+     "srcLine": 47,
+     "sha256": "f7f119b8a6ba2152021da3cb8bc3d3062a30df75ac55a494c612828259f3bc40"
+    }
+   ]
+  },
+  "global": {
+   "file": "sites/global.md",
+   "count": 4,
+   "brands": [
+    "Mercedes-Benz",
+    "Aston Martin",
+    "IM Motors 智己"
+   ],
+   "sections": [
+    {
+     "title": "Mercedes-Benz",
+     "srcLine": 9,
+     "sha256": "21a3d4eba3e17da9193b9f4e3221b9ab5119c32e22b079ccf4afc1dea2982412"
+    },
+    {
+     "title": "Aston Martin（官方不公布 MSRP → 按 `官网无价格` 规则出表）",
+     "srcLine": 19,
+     "sha256": "a4d864e461ca191ebb670713d751a53a6339f4554a4573c06c2f1b3ad9673cf8"
+    },
+    {
+     "title": "IM Motors 智己（全球站 `www.immotors.com/global/`：站点全通，但**官网不公开价格**）❌",
+     "srcLine": 33,
+     "sha256": "eafca2929eb58cf88841f6f80477b6bb802a9787a27d90cb4e1613915a2c6957"
+    },
+    {
+     "title": "其它市场速记（无独立详段）",
+     "srcLine": 55,
+     "sha256": "1bd5fbd2b061a8df734b7bab8f60a9ddf7694d8809956b3f70cae79b1cb7ed1e"
+    }
+   ]
+  },
+  "gr": {
+   "file": "sites/gr.md",
+   "count": 1,
+   "brands": [
+    "Nissan"
+   ],
+   "sections": [
+    {
+     "title": "Nissan（GR 希腊：主站 Akamai 403，`build.nissan.gr` 配置器可直连）✅",
+     "srcLine": 9,
+     "sha256": "5277cf276cc0921096eaeee8b4645f3e4e5cfe9c270ee32c33edcf4b59062c5b"
+    }
+   ]
+  },
+  "in": {
+   "file": "sites/in.md",
+   "count": 13,
+   "brands": [
+    "Force Motors",
+    "Jeep",
+    "MINI",
+    "VinFast",
+    "Honda Cars",
+    "BYD",
+    "Toyota",
+    "Ford",
+    "Volkswagen India 大众印度",
+    "BMW India 宝马印度",
+    "Porsche India 保时捷印度",
+    "Mercedes-Benz India 奔驰印度",
+    "Bentley India 宾利印度"
+   ],
+   "sections": [
+    {
+     "title": "Force Motors（IN 印度 `www.forcemotors.com`：**全通，有官方 `/prices/` 价格总表，SSR 直读**）✅",
+     "srcLine": 9,
+     "sha256": "adccc370e6660d9867173f8eb15dc95ebfb343a703332ecc2231df0a0e936b08"
+    },
+    {
+     "title": "Jeep India（IN 印度 `www.jeep-india.com`：**全通，价格在 SSR + 内联 JSON，可采**）✅",
+     "srcLine": 27,
+     "sha256": "32021c2577cadb0ef46cc42b2ce1c1da080bc342b555dbef5438c32473024188"
+    },
+    {
+     "title": "MINI（IN 印度 `www.mini.in/en_IN/`：**curl 全挂（Akamai HTTP/2 拒绝），只有 Playwright 有头可通**）⚠️ 部分",
+     "srcLine": 75,
+     "sha256": "3a692f2a9e9c253082ea3adbb69c911cc54919d06006c6110bf920d25fc6f403"
+    },
+    {
+     "title": "VinFast（IN 印度 `vinfastauto.in/en`：**Cloudflare Managed Challenge，stealth + reload 可概率性通过**）✅",
+     "srcLine": 92,
+     "sha256": "c18a85dc378ba7024669e10145b6d25d2fbf6f31bf96f1b7f6be2e285b2f02f4"
+    },
+    {
+     "title": "Honda Cars India（IN 印度 `www.hondacarindia.com`：**curl 直通，有官方 JSON API，但只到车系起价**）⚠️ 起价",
+     "srcLine": 124,
+     "sha256": "082dfe8b3bd434c32ae294819971f13cd10609a446aa87977cac7823be37dcf5"
+    },
+    {
+     "title": "BYD India（IN 印度 `www.bydautoindia.com`：**React SPA 空壳，Playwright 可渲染，价格 SSR 在车型页**）✅",
+     "srcLine": 150,
+     "sha256": "3caf79c902656ce52dea3cdf89d65a486f2166d5467789d0e7b1d1aa4c1b4037"
+    },
+    {
+     "title": "Toyota Bharat（IN 印度 `www.toyotabharat.com`：**本站直通，但价格全在后端 API + SafeLine WAF，需「浏览器内 fetch」**）✅ 满配",
+     "srcLine": 173,
+     "sha256": "a8073b49e5282ea59980b0541ae311382e7e7757c4b9468fac41dd3b56a4de2f"
+    },
+    {
+     "title": "Ford India（IN 印度 `www.india.ford.com`：**已退出印度新车市场，官网是纯售后站**）❌ 无数据",
+     "srcLine": 201,
+     "sha256": "4443fbd21845bc44d29f8a20a32dc6a2bb40ace66a59054b73dbe123d11dbf02"
+    },
+    {
+     "title": "Volkswagen India 大众印度（`www.volkswagen.co.in`：AEM + feature-app 微前端，**变体价藏在 MOFA BFF**）✅",
+     "srcLine": 214,
+     "sha256": "1323f9f8021559a8f9abb301dc5f4b13276020a9e45901d0e0cffdd9b2f014b5"
+    },
+    {
+     "title": "BMW India 宝马印度（`www.bmw.in`：**IPv6 全断 / IPv4 时通时断，只能浏览器**；价格全在 all-models 卡片）✅",
+     "srcLine": 240,
+     "sha256": "e4f7beff8589776b791f2c295aec112bb17f7f09be9e0961744794c0d297ec45"
+    },
+    {
+     "title": "Porsche India 保时捷印度（`www.porsche.com/middle-east/india/models/`：**Qwik 序列化状态内嵌，curl 直读**）✅",
+     "srcLine": 263,
+     "sha256": "6a19aa6bed584625a87c4e04f12c81b082df458ea5d7ad8d017562eab969f7ee"
+    },
+    {
+     "title": "Mercedes-Benz India 奔驰印度（`www.mercedes-benz.co.in`：**无头 403 / 有头 200**；价格在 **VMOS API**，接口本身可 curl）✅",
+     "srcLine": 284,
+     "sha256": "5137a41e4ee929467b9cc1f8a346928845c7178c8db39fb25a09f1b9c00bd59b"
+    },
+    {
+     "title": "Bentley India 宾利印度（`www.bentleymotors.com/in/en.html`：**官网全站不标价，印度站仅经销商页**）❌",
+     "srcLine": 314,
+     "sha256": "ad2583eec6444c049b3a9e96c9b88ad96d04667948f757e9a01a47a6f2851a8c"
+    }
+   ]
+  },
+  "kr": {
+   "file": "sites/kr.md",
+   "count": 1,
+   "brands": [
+    "KG Mobility / KGM"
+   ],
+   "sections": [
+    {
+     "title": "KG Mobility / KGM（韩国 `www.kg-mobility.com`：主 HTML 被地理屏蔽，**挖 JS bundle 直取无鉴权 API**）✅",
+     "srcLine": 9,
+     "sha256": "097ad4a1d30f93afb1907a641ad426516778066fa4e5a69b7b786b95dc7f04b1"
+    }
+   ]
+  },
+  "th": {
+   "file": "sites/th.md",
+   "count": 12,
+   "brands": [
+    "GWM 长城",
+    "Nissan",
+    "Mitsubishi",
+    "Subaru",
+    "Denza 腾势",
+    "Volvo",
+    "Isuzu",
+    "Chevrolet",
+    "Tata Motors",
+    "Tesla",
+    "Maserati",
+    "McLaren"
+   ],
+   "sections": [
+    {
+     "title": "GWM 长城（TH 泰国 `www.gwm.co.th`：**全通，价格可直接 curl，一次成功**）✅",
+     "srcLine": 9,
+     "sha256": "cf93e6e3d77ce1721e74167ae9aeb4c5cb6ba1aa6366608214e9c79daa60a5b4"
+    },
+    {
+     "title": "Nissan（TH 泰国 `www.nissan.co.th`：**全通，价格在内联 JSON，curl 直读**）✅",
+     "srcLine": 63,
+     "sha256": "50a8fb3f946441b1ba2295946836a3d78711fdfdc32b92630bfc4088b7c11e71"
+    },
+    {
+     "title": "Mitsubishi（TH 泰国 `www.mitsubishi-motors.co.th`：**全通，价格表 SSR 直读**）✅",
+     "srcLine": 85,
+     "sha256": "35e12ba1b940cec454663e4e2a0465c36ac7a8c8834b635e61fd4d9af8c35db0"
+    },
+    {
+     "title": "Subaru（TH 泰国 `www.subaru.asia/th/en/`：**全通，价格 SSR 直读**）✅",
+     "srcLine": 106,
+     "sha256": "e84ae6c6b7acbc005d9b67df89511ca0bc87d9c50a3ca3fd2967606dfd65ceb7"
+    },
+    {
+     "title": "Denza 腾势（TH 泰国 `www.denzathailand.com/en`：**全通，但官网无独立价格页，价格藏在促销活动条款里**）⚠️ 可采",
+     "srcLine": 125,
+     "sha256": "fcff419854741e7622dc69629fd9c7bd28dc3c36f0ea3dfe274959e3a64fc188"
+    },
+    {
+     "title": "Volvo（TH 泰国 `www.volvocars.com/en-th/`：**curl 全 403，但有头 Playwright 可通；价格只在配置器**）⚠️ 可采",
+     "srcLine": 146,
+     "sha256": "68b47eec14f4ab5434dd87c163770d47f7b58856d3bf550c2300fe06d9b1a276"
+    },
+    {
+     "title": "Isuzu（TH 泰国 `www.isuzu-tis.com`：**完全开放，价格 SSR/RSC 直读**）✅",
+     "srcLine": 166,
+     "sha256": "ab0599454220ecb6a6798303a7bef164f2466d97947fd3490cf9efe9cfe2b71e"
+    },
+    {
+     "title": "Chevrolet（TH 泰国 `www.chevrolet.co.th`：官网**已转型为纯售后服务站**，不销售新车）❌ 无数据",
+     "srcLine": 186,
+     "sha256": "a31ca6df403ad97c260f18c85e058dcbcfb5e74b5487587e7f87e90a0a653819"
+    },
+    {
+     "title": "Tata Motors（TH 泰国 `www.tatamotors.co.th/en`：**Cloudflare 国家封锁，封 CN，无解**）❌",
+     "srcLine": 205,
+     "sha256": "6ab4392e8b12f1e4ffea7f97cf6c9898589436dde279fba7062450932aed2d6b"
+    },
+    {
+     "title": "Tesla（TH 泰国 `www.tesla.com/en_th`：**Akamai IP 级拒绝，无解**）❌",
+     "srcLine": 218,
+     "sha256": "0c31faa1b7bc5d6d3bed9b125ed190df66ed13f9c3402446c1c678d85ed37066"
+    },
+    {
+     "title": "Maserati（TH 泰国 `www.maserati.com/th/en`：站点全通，但**官网刻意不公开价格**）❌",
+     "srcLine": 233,
+     "sha256": "60e97985cdc841ae13cad950822ff4c5f9bfc9a299a52deb838ab7b74ff5ee3d"
+    },
+    {
+     "title": "McLaren（全球含 TH `www.mclaren.com/cars/gl_en/...`：站点全通，但**配置器价格被显式关闭**）❌",
+     "srcLine": 252,
+     "sha256": "72c4620e2acdf105bc139155331ec70f1c078e78537d462f9a246b2f37284693"
+    }
+   ]
+  },
+  "uk": {
+   "file": "sites/uk.md",
+   "count": 5,
+   "brands": [
+    "Honda UK 本田英国",
+    "Hyundai UK 现代英国",
+    "Peugeot",
+    "Fiat",
+    "Ford"
+   ],
+   "sections": [
+    {
+     "title": "Honda UK 本田英国（`www.honda.co.uk`：curl 全通，**grade 级价格藏在配置器页的内联 JSON**）✅",
+     "srcLine": 9,
+     "sha256": "f160ef255dff44be26b11b3bd0b0c37b545795780f9b88e7bd1c762b2f9734e6"
+    },
+    {
+     "title": "Hyundai UK 现代英国（`www.hyundai.com/uk/en`：curl 全通，**车系级起价在 models 页 JSON**，grade 级未公开）✅⚠️",
+     "srcLine": 29,
+     "sha256": "6d7c946d74ce42ee08f81d52b1b67d032219bcdecefe66090f239af339e7ae5d"
+    },
+    {
+     "title": "🇬🇧 Peugeot UK（英国）— 官方 Price List 是 InDesign 在线文档，只能 OCR",
+     "srcLine": 49,
+     "sha256": "780c6addecbfb82011693d0722403c3cc3f2ac0021d0487a3c2ad116c8ff4c8e"
+    },
+    {
+     "title": "🇬🇧 Fiat UK（英国）— 只有车系级，官网主站 JS 全挂",
+     "srcLine": 145,
+     "sha256": "0f9176c12e5077cca9dfd9c359b3b2506863b55e45c860920c1111e7bb36a506"
+    },
+    {
+     "title": "🇬🇧 Ford UK（英国）— 官方 Price List PDF 在 /cars/<model>/pricelist",
+     "srcLine": 178,
+     "sha256": "ba2f0c39e670a77035e93e53110b8bbd4d62cc8d0454f823338310ec6aa3c495"
+    }
+   ]
+  },
+  "us": {
+   "file": "sites/us.md",
+   "count": 3,
+   "brands": [
+    "Cadillac",
+    "Mazda",
+    "Lotus"
+   ],
+   "sections": [
+    {
+     "title": "Cadillac（US 美国 `www.cadillac.com`：**全通，价格 SSR 内联，可采**）✅",
+     "srcLine": 9,
+     "sha256": "f8b5be743d73c27843a5225eb91b5f05b07000ddfda50b5670744cb57ea1ab81"
+    },
+    {
+     "title": "Mazda（US 美国 `www.mazdausa.com`：**全通，价格 SSR + 内联 JSON，可采**）✅",
+     "srcLine": 50,
+     "sha256": "1ef12fd8e753f4a538f78fa41419e09010c0f471d82d470547e07b3b65eee012"
+    },
+    {
+     "title": "Lotus（US 美国 `www.lotuscars.com/en-US`：站点全通，但**美国官网基本不公开价格**，仅 Eletre 标价）⚠️ 部分",
+     "srcLine": 71,
+     "sha256": "db89f6cbfc26ab850177d7345bf8c014bd322efef97547ca3d7c5a7e3b1ec000"
+    }
+   ]
+  }
+ }
+}

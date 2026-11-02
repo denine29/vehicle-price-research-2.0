@@ -1,1 +1,43 @@
-# vehicle-price-research-2.0
+# vehicle-price-research
+
+「品牌 × 市场」官网 MSRP 采集 → 统一 8 列 XLSX（+ 年款依据副表）。
+
+## 开工前（任何 agent 都要先做这三步）
+
+1. 读 `SKILL.md`（规则、口径、自检清单）。
+2. 读 `references/sites.md`（**索引 + 通用方法**，约 260 行）。
+3. 按索引里的「详段」只读**对应市场文件** `references/sites/<market>.md`，不要整读、不要只看索引就动手。
+
+## 收工前（两个硬门槛，未通过不算完成）
+
+```bash
+node scripts/selftest.js        # 生成器 4 组夹具，逐格比对
+node scripts/check_sites.js     # 知识库：索引↔市场文件的段数/覆盖/围栏/哈希
+node scripts/verify_xlsx.js <xlsx> <rows.json> --basis year_basis.json --money euro --date YYYYMMDD  # 成品回读
+```
+
+交付前还要按 SKILL.md 第六节做**回读校验**（行数 / 8 列 / E 列 `@` / 冻结 / 筛选 / 逐行 0 差异）。
+
+## 结构
+
+```
+SKILL.md                主规则（格式 / 口径 / 流程 / 反爬 A–E / 自检清单）
+references/sites.md     索引 + 通用方法 + 止损判定（约 260 行）
+references/sites/*.md   13 个市场详段 + _map.json + _template.md
+scripts/                triage.js（分诊）/ write_xlsx.js（唯一生成器）/ selftest.js / check_sites.js / update_sites_meta.js
+examples/               9 份真实交付样例 + README
+```
+
+## 维护知识库（加新站 / 新国家）
+
+```bash
+# 1) 追加段到对应市场文件末尾（模板 references/sites/_template.md）
+# 2) 在 references/sites.md 的市场表加一行（品牌 / 结论 / 一句话方法）
+node scripts/update_sites_meta.js     # 同步段数、品牌清单、_map.json 哈希（不动正文）
+node scripts/check_sites.js           # 复核；报「孤儿段」= 索引缺品牌行
+```
+
+## 环境
+
+Windows 本机：无 Python / 无 npm 网络；用 `curl --ssl-no-revoke`、`node scripts/triage.js`、browser MCP 取数。
+`write_xlsx.js` 的依赖 exceljs **已内置在 `scripts/node_modules`**，直接 `cd scripts && node write_xlsx.js …` 即可；只有该目录被清理时才需要 `npm i exceljs`。
