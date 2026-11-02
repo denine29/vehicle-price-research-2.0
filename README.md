@@ -41,3 +41,14 @@ node scripts/check_sites.js           # 复核；报「孤儿段」= 索引缺�
 
 Windows 本机：无 Python / 无 npm 网络；用 `curl --ssl-no-revoke`、`node scripts/triage.js`、browser MCP 取数。
 `write_xlsx.js` 的依赖 exceljs **已内置在 `scripts/node_modules`**，直接 `cd scripts && node write_xlsx.js …` 即可；只有该目录被清理时才需要 `npm i exceljs`。
+
+## 离线依赖（GitHub 仓库里）
+
+仓库的 `vendor/node_modules.tar.gz` 是 exceljs 4.4.0 及其依赖的打包（约 7.5 MB，内容与本地 `scripts/node_modules` 一致）。clone 后解压即可离线运行：
+
+```bash
+tar -xzf vendor/node_modules.tar.gz -C scripts/
+node scripts/selftest.js
+```
+
+> 为什么不直接提交 `scripts/node_modules/` 目录：里面 5889 个文件，走 GitHub API 单次提交不现实；打包成一个文件更稳。也可以忽略它，在 `scripts/` 下 `npm i exceljs`。
