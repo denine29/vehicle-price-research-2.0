@@ -92,6 +92,7 @@ const autoRange = ws => {
       if (/[€$£฿¥]/.test(price)) add(`第${r}行 MSRP 含货币符号: ${price}`);
       else if (!/^[\d.,]+$/.test(price)) add(`第${r}行 MSRP 不是数字文本: ${price}`);
     }
+    for (let c = 1; c <= 3; c++) if (!cellText(ws.getCell(r, c)).trim()) add(`第${r}行 第${c}列「${HEADER[c - 1]}」为空`);
     const fuel = cellText(ws.getCell(r, 8)).trim();
     if (!FUELS.includes(fuel)) add(`第${r}行 燃油分类取值非法: ${fuel}`);
     const d = cellText(ws.getCell(r, 7)).trim();

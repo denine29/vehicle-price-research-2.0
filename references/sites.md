@@ -172,6 +172,23 @@
 
 > 详段：sites/gr.md（1 段）
 
+### 澳大利亚 AU
+
+| 品牌 | 结论 | 数据源 / 一句话方法 |
+|---|---|---|
+| Kia | ✅ | Build & Price 先设邮编 **2000**（写 `regionCode=NSW; postCode=2000` 两个 cookie）→ `curl` 带 cookie 直取每个等级页；价格取页面显示的 Drive Away（`trimOfferPrice`，无则 `trimPrice`=RRP+上路费），**两者差值为活动折扣**；型号名取等级卡 `<label>` 文本（`Air - Standard Range`），**不用 API 内部名**（`Air SR`）；年款取车型页浏览器标题（`2027 Kia EV3…`） |
+| Nissan | ✅ | 车型页不给逐版本价；配置器 `cfg.shtml` 读版本卡「Driveaway from」，**须先走 Set Location 弹窗提交 2000**（默认就是 Sydney，`defaultPostCode:"2000"`）；年款看导航卡 `data-vehicle-year` + aria-label + 片段名，**Patrol 三处冲突**；车型页与配置器常差 1 AUD（下取整 vs 四舍五入） |
+| LDV | ✅ | 价全在 `/price/`：一表两栏 `Retail Price From` / `ABN Holder Price From`，**删除线那条才是建议价**；按「标签/零售/ABN」三格序列解析（不是 table）；Cab Chassis 价不含货箱；无 postcode 门 |
+| Denza | ⚠️ | 全站无常规售价，只有 `/au/offer` 限时活动 Driveaway（清库、限时）→ 不采；**年款也踩空**：`MY26` 只出现在规格书文件名与按钮属性 `data-document-name`，三份规格书（47/47/25 MB）全文 0 次命中 `MY\d\d` → 首版按文件名写的 MY26 已在 v2 改回「官网无年款」；`Build & Order` 跳渠道商城 |
+| CUPRA | ✅ | ⚠ 首版误判「零金额」：价在 `/stock?t_model=<EXFO\|EXAE\|EXAF\|EXAI\|EXSP>&sort=price_asc` 的库存卡上，**必须先过官网弹窗 `Enter postcode and find nearest dealer / We use your region to get accurate prices`（填 2000）**；金额在 `ds-currency` 的 **shadow root** 里（`body.innerText` 取不到，要递归 `el.shadowRoot` 读 `amount-number`），只查 DOM 文本就会看成「有标签没价」；口径＝脚注 [D1] `Manufacturer's recommended driveaway price (MRDP) for new MY26 vehicles`（含选装 → 同一版本多张卡不同价，**取该版本最低卡价当起价**，最高价与卡数进副表）；年款直接印在卡面（`S 110kW MHEV MY26`、`Endurance 210kW MY25.5`、`VZ 250kW AWD MY24`）；`/carshop` 只是导航壳；`vtpapi.seat.com/…/search/car` 裸调 401（不复用站点内置 token）；ATECA、BORN 不在库存车型筛选里 → `官网无价格` + 停销 `是`；`VZX WITH EXTREME PACK` 无独立版本行 → 不出行 |
+| GWM ANZ | ✅ | 逐版本上路价在 `/au/config/<车型>`（**无邮编框，按州取价**：面板点州标签从默认 VIC 切 NSW）；`Driveaway price includes savings of $…` 属**价内含减免**；车型页首价是默认展示版本、不是起价 |
+| Škoda | ✅ | `cc.skoda-auto.com` 配置器三连：`POST /c3pobe/version {"country":"AUS"}` 取 snapshotVersion → `HomepageSelection` 拿在售车型卡（`title` 里就是 `MY27`/`MY26`）→ `POST /c3popr/v3/GetTrimlinesPrices`（传 ModelClass=车系码前 2 位 + ModelYear）一次拿全 class 的 `prices[]{id:trimlineId,price}`；价格即 MRDP 上路价（`disclaimers` 首条）；**`Find` 结果≠在售**（NW 夹着停售 Scala、NU 夹着无页面的 130 Edition）→ 用 `/sitemap-web.xml` + 车型页内嵌 `bodies[].derivatives[]` 回筛 |
+| Volvo | ✅ | `curl` 全 403 → 真浏览器点 `/au/build/<model>/`；**4 维矩阵**：衍生款（EX30 / EX30 Cross Country、XC90 / XC90 Black Edition）× 等级（Plus/Ultra）× 动力（B4/B5/T8/P5/P8/P6/P10/Twin…）× **主题（XC40 Ultra 有 Bright / Dark，Dark +$1,050）**；价格取 `[data-testid=car-price-offer-price]` 的 MRDP（postcode 默认 2000），点卡片后要等 4–5 s |
+| Infiniti | ⛔ | 品牌**已退出澳洲**：`infiniticars.com.au` 证书名不匹配（curl 000 / `SEC_E_WRONG_PRINCIPAL`，需 `curl -kL`）301 → 全球站 `infiniti.com/regions/en-au.html`；正文逐字 `Sales of new cars in your location have come to an end.`、区域数据里 Australia 带 `"sunset":true`；en-au 只剩 auto-repair / financial-services / owners-faq，`/regions/en-au/vehicles/qx60.html`、`build.html`、`sitemap.xml` 全 404，导航里的 QX60/QX65/QX80 指向美国页 → **不出表**（别用 `官网无价格` 凑行，会被读成"在售但没标价"） |
+| Hyundai | ✅ | 浏览器同源 `fetch`（curl 403 指纹级）：`content/api/au/hyundai/v3/carpricecalculator?postcode=2000&modelname=<小写带空格>`，上路价取 `priceEstimate`、`price` 是 RRP；**型号名 = variantGroup + engineType + transmissionType**，接口 `name`（NX4/CN7/MX5）是内部名；车型全集用 `/carpricecalculator/models`（带 categoryId 的才算，含 Runout/Coming Soon 分类）；**空结果先换 key**（`sonata` 空、`sonata n line` 有价）；`i30 N` 与 `i30 Sedan N` 是两个车型；**年款只印在规格表 PDF 内文**（页面/接口/配置器全无 MY），4 车型 13 行靠 `pdftotext` 抽全文得到，文件名里的 `MY26/MY27` 与 `…/my26-tucson/` 路径不作数；HTML 403 但 `/content/dam/**` 的 PDF `curl` 200 |
+
+> 详段：sites/au.md（10 段）
+
 ### 新西兰 NZ / 菲律宾 PH / 全球
 
 | 品牌 | 结论 | 数据源 / 一句话方法 |

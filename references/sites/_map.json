@@ -1,7 +1,75 @@
 {
- "generated": "2026-11-02",
+ "generated": "2026-11-05",
  "source": "references/sites.md",
  "markets": {
+  "au": {
+   "file": "sites/au.md",
+   "count": 10,
+   "brands": [
+    "Kia",
+    "Nissan",
+    "LDV",
+    "Denza",
+    "CUPRA",
+    "GWM ANZ",
+    "Hyundai",
+    "Škoda",
+    "Volvo",
+    "Infiniti"
+   ],
+   "sections": [
+    {
+     "title": "Kia（AU 澳大利亚 `www.kia.com/au`：Build & Price 先设邮编，`curl` 带 cookie 可直取全量等级价）✅",
+     "srcLine": 10,
+     "sha256": "cb502c60fbdd6bd68d7a2aceec2c7d1f911fa6b16a6fdee626e4aa387394a020"
+    },
+    {
+     "title": "Nissan（AU 澳大利亚 `www.nissan.com.au`：车型页无逐版本价，逐版本上路价只在配置器 SPA 的 grade→version 卡上）✅",
+     "srcLine": 63,
+     "sha256": "fa2c4591ea8caccf36754fe75baf79289356a2e44803556e6cf7ab2269385a0a"
+    },
+    {
+     "title": "LDV（AU 澳大利亚 `www.ldvautomotive.com.au`：价全在 `/price/` 一表两栏，Retail 与 ABN 并列）✅",
+     "srcLine": 81,
+     "sha256": "96dfc9efbb90aceba88a5a4b4a242828c56596f6790eb3595d1e8fa5980809b9"
+    },
+    {
+     "title": "Denza（AU 澳大利亚 `www.denza.com/au`：全站不公开常规售价，只有 `/au/offer` 的限时活动 Driveaway）⚠️",
+     "srcLine": 96,
+     "sha256": "2f3d3c639fbb09eccce26fa98ad16857e1d6c77d71624b38cc3fc4675257f056"
+    },
+    {
+     "title": "CUPRA（AU 澳大利亚 `cupra.com.au → cupraofficial.com.au`：价在 `/stock` 库存卡上，**必须先过邮编闸门**）✅",
+     "srcLine": 108,
+     "sha256": "bc67df55daf9151b9507a8698fbaf56cf11263542664d71bfb03345194f65f31"
+    },
+    {
+     "title": "GWM ANZ（AU 澳大利亚 `www.gwmanz.com/au`：车型页只有一个\"展示版本\"价，逐版本价在 `/au/config/<车型>`）✅",
+     "srcLine": 123,
+     "sha256": "50b17b7ce49864114bfcc03374db0390856b4f7e062f57360f072faf7c404d73"
+    },
+    {
+     "title": "Hyundai（AU 澳大利亚 `www.hyundai.com/au/en`：车型页/规格书全无价，价与版本全集都在配置器背后那个接口）✅",
+     "srcLine": 135,
+     "sha256": "a60708c7bf1ec9ed4b7f7a29c08b6fd9bf1bc1e51d74c47f25d7c8f84917a1cb"
+    },
+    {
+     "title": "Škoda（AU 澳大利亚 `www.skoda.com.au` → 配置器 `cc.skoda-auto.com`：全量 MRDP 在 `GetTrimlinesPrices`，在售范围要拿官网 derivative 目录回筛）✅",
+     "srcLine": 161,
+     "sha256": "7514c860732f2292f01449f3a3b3b6080fdfc3938d655d5151fc29a6b2f00805"
+    },
+    {
+     "title": "Volvo（AU 澳大利亚 `www.volvocars.com/au`：Build 页 4 维矩阵 —— 衍生款 × 等级 × 动力 × 主题，主题 `Dark` 只挂在 XC40 Ultra 上）✅",
+     "srcLine": 191,
+     "sha256": "b24f5e20ac98d73315672d4d641607616270388dafe8104567a99f317acfc3ea"
+    },
+    {
+     "title": "Infiniti（AU 澳大利亚 `infiniticars.com.au`：官网自己写明「当地新车销售已结束」→ 按退出市场止损，不出表）⛔",
+     "srcLine": 208,
+     "sha256": "79e3a03399a4066b2a895aad8c764d45bdade72ca4f5b9fd811d46f5ebcde48f"
+    }
+   ]
+  },
   "be": {
    "file": "sites/be.md",
    "count": 11,

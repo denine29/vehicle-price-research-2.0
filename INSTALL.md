@@ -48,10 +48,10 @@ cp -r vehicle-price-research ~/.claude/skills/
 vehicle-price-research/
 ├── SKILL.md                     主规则：格式 / 口径 / 流程 / 反爬按症状查表（A–E 五组）
 ├── INSTALL.md                   本文件
-├── examples/                    ★ 2 份现行规范样例（双 sheet）+ legacy/ 7 份历史单 sheet + README
+├── examples/                    ★ 3 份现行规范样例（双 sheet）+ legacy/ 7 份历史单 sheet + README
 ├── references/
 │   ├── sites.md                 索引 + 通用方法 + 止损判定（约 260 行）
-│   ├── sites/                   13 个市场详段：be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/global
+│   ├── sites/                   14 个市场详段：be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/global
 │   │                            + _map.json（段→文件映射）+ _template.md（新市场/新站模板）
 │   └── workflow.md              给不支持 skill 的 agent 用的可复制提示词模板
 └── scripts/
@@ -68,12 +68,13 @@ vehicle-price-research/
 
 ## examples/ 里有什么
 
-先看 **2 份现行规范**（8 列 + 年款依据 7 列，可逐项对照）；`legacy/` 里是 7 份历史单 sheet 样例，只看主表写法。
+先看 **3 份现行规范**（8 列 + 年款依据 7 列，可逐项对照）；`legacy/` 里是 7 份历史单 sheet 样例，只看主表写法。
 
 | 文件 | 条数 | 看点 |
 |---|---|---|
 | `CUPRA_BE` | 93 | **现行规范**；配置器 API 直取；BEV/Gasoline/MHEV/PHEV 四类按型号名逐字判定；年款取接口 `model_year` |
 | `Subaru_BE` | 13 | **现行规范**；两个官方源交叉且逐车系集合相等；年款依据逐字引 PDF 脚注；含税 `×1,21` 反算 |
+| `Kia_AU` | 98 | **现行规范**；澳元上路价保留分（`--money comma2`）；年款取车型页标题（`2026 Kia …`）；22 组年款依据 |
 | `legacy/Mercedes-Benz_UK` | 403 | 规模上限；同名车系按动力拆分（`CLA` / `CLA Electric`） |
 | `legacy/Skoda_UK` | 133 | 全量 `MY2027`；五种动力并存 |
 | `legacy/Ford_UK` | 129 | 48V 轻混归 **MHEV**；价格来自官方 PDF |
@@ -96,6 +97,6 @@ vehicle-price-research/
 ## 已覆盖市场
 
 西班牙 ES · 比利时 BE · 丹麦 DK · 智利 CL · 希腊 GR · 泰国 TH · 美国 US · 印度 IN · 韩国 KR ·
-英国 UK · 德国 DE · 法国 FR · 新西兰 NZ · 菲律宾 PH · 全球站
+英国 UK · 德国 DE · 法国 FR · 新西兰 NZ · 菲律宾 PH · 澳大利亚 AU · 全球站
 
 共 50+ 个品牌站点，其中 ✅ 可采 30+ 个。

@@ -84,6 +84,20 @@ CASES.push({
   warns: [],
 });
 CASES.push({
+  name: 'comma2（澳元上路价保留分）',
+  rows: [
+    { brand: 'Kia', model: 'Stonic', version: 'S 1.0T MHEV', year: '2026', price: 29990, discontinued: '否', fuel: 'Benzine' },
+    { brand: 'Kia', model: 'Stonic', version: 'GT-Line 1.0T MHEV', year: '2026', price: 59816.21, discontinued: '否', fuel: 'Benzine' },
+  ],
+  args: ['--money', 'comma2'],
+  expect: [
+    ['Kia', 'Stonic', 'S 1.0T MHEV', '2026', '29,990.00', '否', date, 'MHEV'],
+    ['Kia', 'Stonic', 'GT-Line 1.0T MHEV', '2026', '59,816.21', '否', date, 'MHEV'],
+  ],
+  warns: [],
+});
+
+CASES.push({
   name: '年款依据副表 + 重复分组告警',
   rows: [
     { brand: 'X', model: 'A', version: 'v1', year: 'MY2027', price: 1000, discontinued: '否', fuel: 'Benzine' },

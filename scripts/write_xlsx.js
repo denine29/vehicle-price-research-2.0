@@ -3,7 +3,7 @@
 把采集结果写成 vehicle-price-research 规定的 8 列 XLSX。
 
 用法：
-  node write_xlsx.js <rows.json> <输出前缀> --date YYYYMMDD [--money euro|lakh|comma] [--year-basis <year_basis.json>]
+  node write_xlsx.js <rows.json> <输出前缀> --date YYYYMMDD [--money euro|lakh|comma|comma2] [--year-basis <year_basis.json>]
 
 year_basis.json（可选，写了就在工作簿里加「年款依据」副表）：
   [{"brand","model","year","basis","quote","source"}, ...]
@@ -13,6 +13,7 @@ rows.json: [{"brand","model","version","year","price","discontinued","fuel"}, ..
   price 为数字（可带 "1.234,56" 这类千分位串）；格式化方式由 --money 决定（默认 comma）
     euro  -> 28.220,00   （欧元区，点千分位、逗号小数）
     comma -> 102,700     （美元/英镑/泰铢等，四舍五入到整数）
+    comma2-> 106,230.27  （澳元等需要保留分的上路价：逗号千分位 + 两位小数）
     lakh  -> 2,11,29,000 （印度 lakh 分组）
   单元格只放数字，不带货币符号
   year 缺省 -> 官网无年款；discontinued 缺省 -> 否；fuel 缺省 -> 未标注
@@ -100,6 +101,10 @@ function fmtPrice(p, mode) {
   if (mode === 'euro') {
     const [ip, dp] = n.toFixed(2).split('.');
     return ip.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + dp;
+  }
+  if (mode === 'comma2') {
+    const [ip, dp] = n.toFixed(2).split('.');
+    return ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + dp;
   }
   if (mode === 'lakh') {
     const s = String(Math.round(n));
