@@ -151,6 +151,8 @@ discountAmount: 1747.05   ← 折扣额
 >
 > **冲突裁决：配置器 vs 价格表不一致时，以配置器为准**（配置器是实时报价，价格表可能旧版/口径不同）。配置器未收录的版本才用价格表价并备注来源。
 >
+> **⚠ 库存/现车页 ≠ 起价页（2026-11-05 补，CUPRA AU 踩过）**：`/stock`、`Find a dealer's inventory`、`Available now` 这类页面给的是**已经配好选装的实车价**，既按代理浮动、又**高于**官网起价（CUPRA 实测：配置器 `LEON VZX SPORTSTOURER 245KW AWD MY26 = 72,490`，而库存卡最低 73,110）。所以**版本名与起价一律以配置器为准**（名称要用它 `SELECT YOUR VARIANT` 那一屏的全名，常带电池容量/驱动形式，如 `… 210KW / 77KWH RWD …`，库存卡上的短行会把这些信息丢掉）；库存页只用来补**配置器里已经下架的年款**（清库 MY24/MY25 这类），并按实车口径备注最低/最高与卡数。
+>
 > **⚠️ From 卡可能是折后价（2026-10-30 补充）**：车型页/总览页的 `From` / `Vanaf` / `Catalogusprijs` 若脚注写 `na aftrek van commerciële kortingen`、`after discounts`、"含置换补贴"之类，它就是**折后展示价，不是 MSRP**。
 > 1. From 卡与配置器目录价**并存** → 一律取配置器，From 只作对齐参考；
 > 2. 两者价差 ≥ 3% 时，依据副表**必须**逐字引那句折扣脚注，并写明取的是哪一层；
@@ -178,6 +180,7 @@ def eurofmt(p):
 4. **交叉验证**：至少用两个来源核对（如配置器 API vs 页面显示价），冲突时按第三节裁决。
 5. **生成 XLSX（8 列，含燃油分类）** 到**工作区目录**（不存在 `/workspace` 就用实际可写目录，如 `/data`）。
 6. **交付说明**：数据表 + 口径 / 缺价车型 / 边界说明。
+7. **回写知识库**（按 §五「维护」+ 质量闸）：本次坑位写进 `sites/<market>.md`，索引加行 → `update_sites_meta` → `check_sites`；没验证的放 `_pending.md`。
 
 **采集失败时怎么办**（踩过：SEAT BE 全站封锁、Hyundai BE 价格 API 被 SNI 封锁）：
 - **不要直接说"采不到"就收工** —— 先分级：是「零数据」还是「部分数据」。
@@ -213,7 +216,17 @@ def eurofmt(p):
 >
 > **知识库结构（2026-10-30 起）**：`references/sites.md` 只是**索引 + 通用方法 + 止损判定**（约 260 行）；每个市场的坑位详段在 `references/sites/<market>.md`（`be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/global`，共 14 个）。
 > **用法**：先读索引 → **只读对应市场文件**（`grep -n "<品牌>"`）。不要整读，也**不要只看索引就动手**——字段名、正则、坑都在详段里。
-> **维护**：新站追加到市场文件末尾（模板 `sites/_template.md`）→ 索引对应表加一行 → `node scripts/update_sites_meta.js`（同步段数/品牌清单/哈希）→ `node scripts/check_sites.js` 复核。
+> **维护（交付后必做，不是可选）**：
+> 1. **新站（市场文件已存在）**：追加到 `sites/<market>.md` 末尾（模板 `sites/_template.md`），并在 §0 对应市场表加一行。
+> 2. **新市场（文件不存在）**：复制 `_template.md` → `sites/<cc>.md` 填头 → 在 `sites.md` §0 新建 `### <国家> <CC>` 表 + 表末 `> 详段：sites/<cc>.md（N 段）`。
+> 3. 跑 `node scripts/update_sites_meta.js`（重数段数/品牌/哈希）→ `node scripts/check_sites.js` 必须 PASS。
+> 4. 把本次「交付结果」写进对应段（文件名、条数、价格区间、未纳入）。
+>
+> **回写质量闸（防止把错知识写进库）**：
+> 1. 只写本次**亲自验证过**的事实：必须有 官网 URL + 逐字原文 + 实测日期；推断、猜测、失败尝试一律不写。
+> 2. 拿不准的写进 `sites/_pending.md`（待复核区，不参与索引与校验），确认后再合并到正式市场文件。
+> 3. 每条新增段至少含：`实测：YYYY-MM-DD`、`来源：URL`、`原文："…"`；缺证据视为未完成。
+> 4. 交付说明里列出「本次回写了哪些段」，便于人工复核。
 
 ### A. 站点打不开 → 先判封锁级别
 
@@ -347,6 +360,7 @@ with sync_playwright() as p:
 - [ ] XLSX 写入**工作区目录**（`/workspace` 或环境实际可写目录），命名 `<品牌>_<市场>_官网价_YYYYMMDD.xlsx`
 - [ ] **生成后回读校验**（不是看一眼就交）：重新打开成品，核对 ⑴ 行数 = 源数据行数 ⑵ 恰好 8 列 ⑶ E 列格式为 `@` ⑷ 首行冻结 ⑸ 自动筛选范围覆盖全表 ⑹ **逐行逐值与源数据比对，0 差异**（发现差异先查口径，不要直接改表）。可直接跑 `node scripts/verify_xlsx.js <xlsx> <rows.json> --basis year_basis.json --money euro --date YYYYMMDD` 一次完成 ⑴–⑹
 - [ ] 交付说明写清：**价格口径**（OTR / Ex-showroom / 含税）、**粒度**（车系级 or 变体级）、未纳入车型及原因
+- [ ] **知识回写 + 质量闸**：只写带 URL / 逐字原文 / 日期的已验证事实；不确定的进 `sites/_pending.md`；回写后 `update_sites_meta` + `check_sites` 全过；交付说明列出本次回写了哪些段（**没写回不算完成**）
 - [ ] **改过生成器 → `node scripts/selftest.js` 全过；改过 sites → `node scripts/check_sites.js` 全过**（这是交付门槛，不是建议）
 - [ ] 中间文件已清理（只留最终 XLSX）
 

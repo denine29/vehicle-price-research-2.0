@@ -159,7 +159,7 @@ Citroën;AMI;Ami Rip Curl Sunset;官网无年款;9.299,99;否;20260930
 | `POST /c3pobe/version` | 取 `snapshotVersion`。**body `{"country":"BEL"}`（键小写、必须 ISO3）**；空 body 报 "A non-empty request body is required"；2 位 `BE` 报 "minimum length of '3'"；返回 JSON 字符串需 `JSON.parse` 两次 |
 | `GET /c3pobe/WebModel/Find?culture=nl-BE&country=BEL&snapshotVersion=<sv>&modelClass=<mc>&modelYear=<year>` | **型号清单关键端点**，返回 `{models:[...]}`，每条含 `id`/`mbvCode`/`engineName`/`fuelTypeName`/`transmissionName`/`trimLineName`/`marketingName`/`trimlineId`/`carlineCode` |
 | `POST /c3popr/v3/GetAllPrices` | **权威目录价**。body `{ModelId, Extras:[], ColorCode, InteriorCode, Settings:{IncludeModelPrice:true,...}, snapshotVersion, TrimlineId}` → `modelPrice.price`（**目录价 Catalogusprijs**）、`priceOriginal`、`discounts`（空数组=无折扣）、`totalPrice` |
-| `POST /c3popr/v3/GetTrimlinesPrices` | ⚠️ **返回促销价（action price），不是目录价**。Fabia Family 返回 21.125 而目录价为 25.290 → **禁用** |
+| `POST /c3popr/v3/GetTrimlinesPrices` | ⚠️ **返回促销价（action price），不是目录价**。Fabia Family 返回 21.125 而目录价为 25.290 → **BE 禁用**（AU 市场例外：同一端点返回 MRDP，见 `sites/au.md`） |
 | `POST /c3pobe/configuration/startConfiguration` | body `{appId:99,country:"BEL",culture:"nl-BE",mbvCode,salesGroup,snapshotVersion}` → `expireSuggestion.modelId`（如 `BEL;skoda;2027;PJ3DJ4;0;GYO1YO1;mda...;nl-BE;;60004;60004`） |
 
 **调用要点（踩坑）**

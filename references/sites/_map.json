@@ -1,10 +1,10 @@
 {
- "generated": "2026-11-05",
+ "generated": "2026-11-06",
  "source": "references/sites.md",
  "markets": {
   "au": {
    "file": "sites/au.md",
-   "count": 10,
+   "count": 12,
    "brands": [
     "Kia",
     "Nissan",
@@ -15,13 +15,15 @@
     "Hyundai",
     "Škoda",
     "Volvo",
-    "Infiniti"
+    "Infiniti",
+    "Chevrolet / GMSV",
+    "Citroën"
    ],
    "sections": [
     {
      "title": "Kia（AU 澳大利亚 `www.kia.com/au`：Build & Price 先设邮编，`curl` 带 cookie 可直取全量等级价）✅",
      "srcLine": 10,
-     "sha256": "cb502c60fbdd6bd68d7a2aceec2c7d1f911fa6b16a6fdee626e4aa387394a020"
+     "sha256": "1b16dfff9594e02614d6d9b55a8818d2f4e2305eefc1b4fa88685c63180bf147"
     },
     {
      "title": "Nissan（AU 澳大利亚 `www.nissan.com.au`：车型页无逐版本价，逐版本上路价只在配置器 SPA 的 grade→version 卡上）✅",
@@ -39,34 +41,44 @@
      "sha256": "2f3d3c639fbb09eccce26fa98ad16857e1d6c77d71624b38cc3fc4675257f056"
     },
     {
-     "title": "CUPRA（AU 澳大利亚 `cupra.com.au → cupraofficial.com.au`：价在 `/stock` 库存卡上，**必须先过邮编闸门**）✅",
+     "title": "CUPRA（AU 澳大利亚 `cupra.com.au → cupraofficial.com.au`：**主源是配置器 `/carshop`**，清库年款补自 `/stock` 库存卡）✅",
      "srcLine": 108,
-     "sha256": "bc67df55daf9151b9507a8698fbaf56cf11263542664d71bfb03345194f65f31"
+     "sha256": "7a1058fe7c0b308b1e3628cc518b5941dbfd856167bd7102b0ef9bf1786b96f5"
     },
     {
      "title": "GWM ANZ（AU 澳大利亚 `www.gwmanz.com/au`：车型页只有一个\"展示版本\"价，逐版本价在 `/au/config/<车型>`）✅",
-     "srcLine": 123,
+     "srcLine": 125,
      "sha256": "50b17b7ce49864114bfcc03374db0390856b4f7e062f57360f072faf7c404d73"
     },
     {
      "title": "Hyundai（AU 澳大利亚 `www.hyundai.com/au/en`：车型页/规格书全无价，价与版本全集都在配置器背后那个接口）✅",
-     "srcLine": 135,
+     "srcLine": 137,
      "sha256": "a60708c7bf1ec9ed4b7f7a29c08b6fd9bf1bc1e51d74c47f25d7c8f84917a1cb"
     },
     {
      "title": "Škoda（AU 澳大利亚 `www.skoda.com.au` → 配置器 `cc.skoda-auto.com`：全量 MRDP 在 `GetTrimlinesPrices`，在售范围要拿官网 derivative 目录回筛）✅",
-     "srcLine": 161,
-     "sha256": "7514c860732f2292f01449f3a3b3b6080fdfc3938d655d5151fc29a6b2f00805"
+     "srcLine": 163,
+     "sha256": "a0c494bde7e176a0c875e050ba98f2ccfa006a7552350c41a59f3e40add1c501"
     },
     {
      "title": "Volvo（AU 澳大利亚 `www.volvocars.com/au`：Build 页 4 维矩阵 —— 衍生款 × 等级 × 动力 × 主题，主题 `Dark` 只挂在 XC40 Ultra 上）✅",
-     "srcLine": 191,
+     "srcLine": 194,
      "sha256": "b24f5e20ac98d73315672d4d641607616270388dafe8104567a99f317acfc3ea"
     },
     {
      "title": "Infiniti（AU 澳大利亚 `infiniticars.com.au`：官网自己写明「当地新车销售已结束」→ 按退出市场止损，不出表）⛔",
-     "srcLine": 208,
+     "srcLine": 211,
      "sha256": "79e3a03399a4066b2a895aad8c764d45bdade72ca4f5b9fd811d46f5ebcde48f"
+    },
+    {
+     "title": "Chevrolet / GMSV（AU 澳大利亚 `www.gmspecialtyvehicles.com/au-en`：GM 进口商渠道站，全站 0 官方价且官网写明由经销商定价 → 出「官网无价格」表）⚠️",
+     "srcLine": 221,
+     "sha256": "ccef6d18e007661fc955aacaadbf06941a0d0d7b6923c52c24272d8bdfa1fce0"
+    },
+    {
+     "title": "Citroën（AU 澳大利亚 `www.citroen.com.au`：官网逐字声明 2024-11-01 起停止澳洲新车销售、只剩售后 → 按退出市场止损，不出表）⛔",
+     "srcLine": 249,
+     "sha256": "abda41f0d414be087c586026e54789c7c23c3bb7d2de598c44778555f1f40e9d"
     }
    ]
   },
@@ -104,7 +116,7 @@
     {
      "title": "Škoda（BE 比利时 `nl.skoda.be`：配置器 API 逆出，权威目录价）",
      "srcLine": 144,
-     "sha256": "bd923b4ec044846a95824f253e9d2fb801adac473dbe850dc4db648c3a0ab9f0"
+     "sha256": "0a3bd8277b55721ad3357035d1c0d341da22d252a0f16f30b2a3bfd875234af3"
     },
     {
      "title": "Volvo（BE 比利时 `volvocars.com/nl-be`：Akamai 拦 headless，必须 xvfb + headed Chromium）",
@@ -466,6 +478,26 @@
      "title": "Bentley India 宾利印度（`www.bentleymotors.com/in/en.html`：**官网全站不标价，印度站仅经销商页**）❌",
      "srcLine": 314,
      "sha256": "ad2583eec6444c049b3a9e96c9b88ad96d04667948f757e9a01a47a6f2851a8c"
+    }
+   ]
+  },
+  "jp": {
+   "file": "sites/jp.md",
+   "count": 2,
+   "brands": [
+    "Mazda",
+    "Nissan"
+   ],
+   "sections": [
+    {
+     "title": "Mazda（JP 日本 `www.mazda.co.jp`：`/grade/` 页 SSR 直出「グレード×駆動×変速機×税込価格」，curl 全通）✅",
+     "srcLine": 10,
+     "sha256": "0365e6e85639a4048a90d61cee275a44b91a4332db493e8c210e045a859dae70"
+    },
+    {
+     "title": "Nissan（JP 日本 `www3.nissan.co.jp`：`version-explorer` JSON 出グレード名，价格在车种页内嵌 `individualVehiclePriceJSON`）✅",
+     "srcLine": 51,
+     "sha256": "39b9e13b474df8a803980ed2fa93b1ee5bcb73254ccc2e7007423e545170b605"
     }
    ]
   },
