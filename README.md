@@ -23,7 +23,7 @@ node scripts/verify_xlsx.js <xlsx> <rows.json> --basis year_basis.json --money e
 ```
 SKILL.md                主规则（格式 / 口径 / 流程 / 反爬 A–E / 自检清单）
 references/sites.md     索引 + 通用方法 + 止损判定（约 260 行）
-references/sites/*.md   14 个市场详段 + _map.json + _template.md
+references/sites/*.md   15 个市场详段 + _map.json + _template.md
 scripts/                triage.js（分诊）/ write_xlsx.js（唯一生成器）/ selftest.js / check_sites.js / update_sites_meta.js
 examples/               10 份真实交付样例（3 份现行规范 + 7 份 legacy）+ README
 ```

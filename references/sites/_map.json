@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-06",
+ "generated": "2026-11-10",
  "source": "references/sites.md",
  "markets": {
   "au": {
@@ -84,7 +84,7 @@
   },
   "be": {
    "file": "sites/be.md",
-   "count": 11,
+   "count": 12,
    "brands": [
     "CUPRA",
     "KGM / KG Mobility",
@@ -95,7 +95,8 @@
     "Hyundai",
     "Mitsubishi",
     "MG",
-    "Maxus"
+    "Maxus",
+    "Subaru"
    ],
    "sections": [
     {
@@ -152,6 +153,11 @@
      "title": "Maxus BE（比利时 `www.maxusmotors.be/nl`：**Next.js `__NEXT_DATA__` 直读，价格字段最规整**）✅",
      "srcLine": 852,
      "sha256": "e5b1c213b960efc3f991b7da2096ae444c474b6823971f65fe14339a4b3e8521"
+    },
+    {
+     "title": "Subaru（BE 比利时 `www.subaru.be`：车型页版本卡 + 官方 Prijslijst PDF 双源交叉，e-BOXER 判 MHEV）✅",
+     "srcLine": 864,
+     "sha256": "4c08342544a5fba2fbb087ab4dbb6a228240dc1628684a505084c9bfa89b477b"
     }
    ]
   },
@@ -483,10 +489,17 @@
   },
   "jp": {
    "file": "sites/jp.md",
-   "count": 2,
+   "count": 9,
    "brands": [
     "Mazda",
-    "Nissan"
+    "Nissan",
+    "Subaru",
+    "Volvo",
+    "Hyundai",
+    "Chevrolet",
+    "Citroën",
+    "Maserati",
+    "McLaren"
    ],
    "sections": [
     {
@@ -497,7 +510,42 @@
     {
      "title": "Nissan（JP 日本 `www3.nissan.co.jp`：`version-explorer` JSON 出グレード名，价格在车种页内嵌 `individualVehiclePriceJSON`）✅",
      "srcLine": 51,
-     "sha256": "39b9e13b474df8a803980ed2fa93b1ee5bcb73254ccc2e7007423e545170b605"
+     "sha256": "02444fc820b9d34499b4d1e8b43b4cd3f1d79422703457a6e9f00f3c4f4ffae5"
+    },
+    {
+     "title": "Subaru（JP 日本 `www.subaru.jp`：`/carlineup/` 出全集 28 卡，价格只在各车系 `/grade/` 页 SSR 直出，curl 全通）✅",
+     "srcLine": 80,
+     "sha256": "518344e92b831b1d6d8d20ddb2096bab1ae7f515e53f38b3ba97808cad8f37eb"
+    },
+    {
+     "title": "Volvo（JP 日本 `www.volvocars.com/jp`：curl 全 403 → 真浏览器；**四层：バージョン × グレード × パワートレイン × テーマ**，年款藏在车型页的 offer 价格表里）✅",
+     "srcLine": 132,
+     "sha256": "d0279569fe2957d9b4a9b3121c468772373893887ec980d9d61d4822000b9d04"
+    },
+    {
+     "title": "Hyundai（JP 日本 `www.hyundai.com/jp`：纯 SSR，`/<slug>/price` 页一张表直出「グレード × 車両価格（消費税込）」）✅",
+     "srcLine": 149,
+     "sha256": "9468760fc008c8e0d08055fde23bd15216669d8d41ed612d495f9aa1b35afa1d"
+    },
+    {
+     "title": "Chevrolet（JP 日本 `www.chevroletjapan.com`：只卖 Corvette / Corvette Z06，车种页内嵌「メーカー希望小売価格(消費税込)」表）✅",
+     "srcLine": 168,
+     "sha256": "a0aed1551cd6b127f29675b8a655de57eedc66339afaab6acfaecd88aea0957d"
+    },
+    {
+     "title": "Citroën（JP 日本 `www.citroen.jp`：curl 403 → 浏览器；价格在各车型页的グレード卡片里，`メーカー希望小売価格（消費税込）X円〜`）✅",
+     "srcLine": 179,
+     "sha256": "767451effcc2fab8da136511dd645b4303a84482a7d36d1bab994af05fb8986c"
+    },
+    {
+     "title": "Maserati（JP 日本 `www.maserati.com/jp/ja`：配置器列 6 车系 11 版本，`carGrid.general.price` 取实时基础 MSRP）",
+     "srcLine": 192,
+     "sha256": "fc829fbcb6333153fc7d234333e7d95d36626e155c909d9bcb32bcacaede851c"
+    },
+    {
+     "title": "McLaren（JP 日本 `/cars/jp_ja`：官网与配置器均不公开价格，12 个车型全部 `官网无价格`）",
+     "srcLine": 214,
+     "sha256": "5f32bb1d3d14ef4209e21db2d595725fec87bcc44c41a2b8568b4c584f64105d"
     }
    ]
   },

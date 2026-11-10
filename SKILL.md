@@ -123,6 +123,7 @@ description: 车型官网价格调研与采集。当用户要求"查某品牌某
 - 仅"颜色/轮毂等配置差异"导致的多价，取最低。
 - `cash price`（现金价）一般不采；**只有官网唯一报价是现金价时才采**并备注。
 - 每条数据必须可回溯到来源 URL。
+- **上路价（OTR / drive-away）**：只在用户明确要求、或官网唯一报价形态就是上路价时采；采了必须在交付说明写明包含项（注册 / CTP / 印花税 / dealer delivery）与所用邮编或地区，**不得与裸车 MSRP 混在一张表里当同一口径比较**。
 - **官网没标注含税性时**：价格照采照出表，但依据副表必须逐字记下官网对税价的全部表述（如只有 `Aanbevolen catalogusprijs`，或只写 `exclusief leveringskosten en milieubijdrage` 而没提 BTW/VAT）；**不得推断"含税/不含税"**，也不得用价格换算反推（没有 excl./incl. 双列时）。实例：Škoda BE 的 `modelPrice` 官网未标 BTW，双列的 Prijslijst PDF 下载返回 401 → 依据里写"官网未标注"。
 
 ### ⚠️ 关键坑：目录价 vs 促销价（Stellantis 系）
@@ -214,8 +215,10 @@ def eurofmt(p):
 >
 > **环境适配（2026-10-30）**：下面的 Playwright 代码块需要 Python + Playwright。只有 Node 的环境（如 Windows 本机）改用 `node scripts/triage.js <url>` 分诊、`curl --ssl-no-revoke` 直连、browser MCP 的页面内 `fetch` 抓 XHR/PDF；没有 `pdfinfo`/`tesseract` 时，PDF 版本看 `pdftotext` 首尾页文本，图片型 PDF 直接判"不可解析"并换源。
 >
-> **知识库结构（2026-10-30 起）**：`references/sites.md` 只是**索引 + 通用方法 + 止损判定**（约 260 行）；每个市场的坑位详段在 `references/sites/<market>.md`（`be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/global`，共 14 个）。
+> **知识库结构（2026-10-30 起）**：`references/sites.md` 只是**索引 + 通用方法 + 止损判定**（约 260 行）；每个市场的坑位详段在 `references/sites/<market>.md`（`be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/global`，共 15 个）。
 > **用法**：先读索引 → **只读对应市场文件**（`grep -n "<品牌>"`）。不要整读，也**不要只看索引就动手**——字段名、正则、坑都在详段里。
+> **大文件分段读（2026-11-10）**：市场文件 >150 行时（`be`/`jp`/`au` 都 >200 行），先 `grep -n "^### "` 取段标题与行号，再 `sed -n 'a,bp'` **只读命中的那一段**；不要整读，也不要把整页 HTML / 完整 rows.json 打印进对话。
+>
 > **维护（交付后必做，不是可选）**：
 > 1. **新站（市场文件已存在）**：追加到 `sites/<market>.md` 末尾（模板 `sites/_template.md`），并在 §0 对应市场表加一行。
 > 2. **新市场（文件不存在）**：复制 `_template.md` → `sites/<cc>.md` 填头 → 在 `sites.md` §0 新建 `### <国家> <CC>` 表 + 表末 `> 详段：sites/<cc>.md（N 段）`。
@@ -368,7 +371,7 @@ with sync_playwright() as p:
 
 ## 参考文件（本 skill 自包含，不依赖外部路径）
 
-- `references/sites.md` — **索引 + 通用方法 + 止损判定**；详段在 `references/sites/<market>.md`（14 个市场文件，`_map.json` 为机器可读映射）
+- `references/sites.md` — **索引 + 通用方法 + 止损判定**；详段在 `references/sites/<market>.md`（15 个市场文件，`_map.json` 为机器可读映射）
 - `references/workflow.md` — 详细工作流与可复制提示词模板（给不支持 skill 的 agent 用）
 - `scripts/triage.js` — **站点可达性分诊（Node 版，优先用这个）**；`triage.py` 是同上的 Python 版
 - `scripts/fetch_pdf.py` — Akamai PDF 破封脚本（先 `ctx.request.get`，跨域也能下；再回退浏览器内 fetch）

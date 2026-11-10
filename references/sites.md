@@ -38,8 +38,9 @@
 | Maxus | ✅ | Next.js `__NEXT_DATA__` → `configurationInfo.configurations[]`；取 `listPrice.priceInclVat`（UI 标签 = "Catalogusprijs"），**不取** `totalPrice` |
 | Hyundai | ✅ | curl 到 `org-eu-www.hyundai.com` 仍被 SNI 级 RST，但**页面内 `fetch()` 可打通** → `POST /eu/papi` 跑 `hppFscs2(country,language,modelId,service:"S03")`，取 `fscPrice`（= Aanbevolen catalogusprijs），**不取**车系页 `Vanaf`（促销） |
 | SEAT | ✅ | curl/无头浏览器全 403，但**用户真机 Chrome 正常** → 真浏览器开 `configurator/w/version?carlineGroup=CARLINE-GROUP-<CODE>&wf=seat-be-fr`，点 finition 卡进 `Motorisation` 步骤读 `Prix à partir de`（= tarifs conseillés TVAC） |
+| Subaru | ✅ | `www.subaru.be` 车型页版本卡 + 官方 Prijslijst PDF（`Catalogusprijs incl. BTW`）双源交叉 5/5；e-BOXER 判 **MHEV**、三款纯电判 BEV；年款取 PDF 脚注 `modeljaar 26` |
 
-> 详段：sites/be.md（11 段）
+> 详段：sites/be.md（12 段）
 
 ### 丹麦 DK
 
@@ -189,6 +190,8 @@
 | Chevrolet / GMSV | ⚠️ 无价格出表 | GM 官方进口渠道站（同域 `/au-en`+`/nz-en`）**全站 0 价格**：32 个页面全文 $ 开头的金额串 0 命中、无配置器/无价格表页、3 份官方飞标 PDF 也无价，FAQ 逐字 `Corvette prices differ by model and features. Please visit your local GMSV Dealer for pricing information.`；对照实验 NZ 站同样 0 价 → 仍出 8 行、MSRP 全填 `官网无价格`；年款在 1500 两页脚注 `Figures shown apply to MY26i …only.`、2500 HD 只在飞标**内文** `MY26 Equipment & Features`、Corvette 靠正文 `The 2026 Corvette Stingray`/`2027 CORVETTE Z06`（E-Ray 2026 与 Z06 2027 并行）；等级全集只在 FAQ 一句里，⚠ 别按那句排 2LT Convertible（车型页逐字 convertible 只给 3LT）；E-Ray 无 `plug-in` 但有 6-8 km 纯电模式 → HEV |
 | Citroën | ⛔ | 官网逐字声明**已停止澳洲新车销售**（`…exclusively support the vehicle maintenance and servicing requirements… effective 1st November 2024, following the cessation of new vehicle sales in the local market.`，`/about-citroen/news/citroen-announcement.html` 日期 15/08/2024）→ **不出表**（`官网无价格` 会被读成"在售只是没价"）；导航只剩 Maintain/Owners/Support，sitemap 48 条 0 新车页，46 页扫下来只有保养套餐价；⚠ `/owners/c5-x/hybrid.html` 残留 `exclusively available by customer order` + `BUILD & PRICE` 配置器深链属**停售前遗留文案**，别当在售证据；抓取要点：`curl` 连 robots 都 403（`/content/dam` 的 PDF 也拦，与 Hyundai AU 相反）→ **真浏览器进去后用同源 `fetch()` 抓全站**；`configurator.citroen.com.au` TLS 握手即断（SNI 级，本机 CN 出口无解，但结论不依赖它） |
 
+> ⚠ **AU 口径**：索引里的「邮编 2000 / drive-away」是 2026-11 批次的任务口径，**不是默认**；默认取官网 MSRP/RRP，只有用户明确要上路价时才按邮编步骤取（见 sites/au.md 头部）。
+
 > 详段：sites/au.md（12 段）
 
 ### 日本 JP
@@ -196,10 +199,16 @@
 | 品牌 | 结论 | 数据源 / 一句话方法 |
 |---|---|---|
 | Mazda | ✅ | `www.mazda.co.jp` curl 全通、纯 SSR；车型在 `/cars/` 的 `passenger|light-vehicle|commercial/<slug>/`，**价格只在各车系 `/grade/` 页**：按 `cmp-grade-and-spec-data__title`（グレード）切块，块内取 `__subtitle`（发动机）与每个 `__variant`（`（2WD｜6EC-AT）` + `¥税込`）；型号名 = グレード + 駆動 + 变速器；**一页两车系**（MAZDA3 页含 FASTBACK/SEDAN、ROADSTER 页含 RF）要按块内文案与 `RF ` 前缀拆；新老 CX-5 同堂（`cx-5` / `cx-5_kf`）；重复渲染按 车系+グレード+駆動+变速器 去重；`e-SKYACTIV G/X/D` 全是 **MHEV**（页内 M HYBRID / マイルドハイブリッド / 48V），`SKYACTIV-G` 才是 Gasoline，`R-EV` = REEV；全站无年式 → `官网无年款`；商用车只有 PDF（CID 编码抽不出字）未纳入 |
-
 | Nissan | ✅ | `www3.nissan.co.jp` curl 全通；グレード名/全集取 `…/vehicles/new/<slug>/version-explorer/jcr:content/core.versionexplorerdata.json`（`versions[].name`），税込价取车种页内嵌 `individualVehiclePriceJSON` 的 `Retail with VAT`（`grades[gradeId].gradePrice`，Serena/X-Trail 只有 grades 没有 versions）；**⚠ dayz/skyline 页错挂 dayz_rider、elgrand/leaf 页错挂 new_roox** → 这 4 款改读 `configurator-v3.html` 的界面文本；e-POWER/e-4ORCE 全记 HEV，CARAVAN 按名称里的 ガソリン/ディーゼル 分；Clipper 四款只有车系起价 |
+| Hyundai | ✅ | `www.hyundai.com/jp` curl 全通、纯 SSR；车型 slug 要从首页 DOM 的 `setGaParam('<slug>')` 挖（`inster/ioniq5/ioniq5n/kona/kona-maunaloa/the-all-new-nexo`），价格在 `/<slug>/price` 的 HTML 表格：表头列 = グレード，价格行标签有 `車両価格（消費税込み）`/`メーカー希望小売価格（消費税込み)`/`車両販売価格（消費税込み）` 三种写法；单グレード车型（IONIQ 5 N、KONA Mauna Loa）表里无グレード名，型号直接用车名；NEXO = FCEV |
+| Chevrolet | ✅ | `www.chevroletjapan.com` curl 200（AEM）；只卖 **CORVETTE / CORVETTE Z06**（`/corvette`、`/corvette/z06`，`/vehicles.html` 是空导航页）；价格在车种页「プライス」表：`メーカー希望小売価格(消費税込)` 列（2LT 15,350,000 / 3LT 17,950,000 / コンバーチブル 19,600,000；Z06 クーペ 3LZ 27,100,000 / コンバーチブル 3LZ 30,500,000）+ SANTORINI EDITION 29,000,000 |
+| Citroën | ✅ | `www.citroen.jp` curl 全 403 → 浏览器（页面内 `fetch('/models/x.html')` 可读 HTML）；价格在各车型页グレード卡 `メーカー希望小売価格（消費税込）X円〜`，按出现顺序与グレード名配对、同名去重；`HYBRID` = 48V **MHEV**、ë-C3 = BEV、BERLINGO = Diesel、C5 X MAX PHEV = PHEV；`c4/e-c4-electric`、`c5-aircross-suv/pluginhybrid` 等子页无价格；页脚「2026年10月現在」是价格日期不是年款 |
+| Volvo | ✅ | `www.volvocars.com/jp` curl 全 403 → 真浏览器（页面内 `fetch` 可读 HTML）；车型清单在 **`/jp/build`**（`/jp/cars/` 常报「一時的にご利用いただけません」）；每个 build 页 = **バージョン（`div.selectable-card`）× グレード**，点衍生款后读 `トリムレベル/モデルグレード` 段；**年款取车型页内嵌 `prices[<slug>].modelYears` 的键**（2027/2026，连续 unescape 4 次后 JSON.parse）；EX60 / V60 Cross Country 的 build 页跳回列表 = 未开卖 |
+| Subaru | ✅ | `www.subaru.jp` curl 全通、纯 SSR、无反爬；全集在 `/carlineup/`（**28 卡 / 6 tab**，切卡别要求 `data-car-id`，否则少 5 张），价格只在各车系 `/<slug>/grade/`：按 `grade-nml-box` 切块取 `txt-xs`（动力）+ `txt-3l`（グレード）+ 每个 `ttl-price-box`（`ttl-box` 駆動 + `span.num` 税込）；型号名 = 动力+グレード+駆動/変速機。**⚠ `img alt` 滞后**（layback 的 alt 写 Smart Edition EX/GT-H EX，渲染实为 Limited EX/Black Selection）→ 只认 `txt-3l`；**⚠ 駆動是 `<p>MT<br>2WD</p>`**，去标签要还原成 `MT 2WD` 不是 `MT2WD`；车系名取 `/grade/` 页 `<h1>`（`レヴォーグ レイバック` 与 `レヴォーグ レイバック（S:HEV）` 是两个车系）；28 卡里 8 张是营销重复卡要折进母车系，只有 WRX STI Sport♯ 是真新增（在 `/advertising/wrx/stisportsharp/`，600 台抽选已结束）；grade-comparison JSON 是**税抜**（×1.1 才对得上）且 chiffon 滞后 → 只作校验；停销认 `label-endofsale`（全站 3 张）+ **渲染出来的** `notice-txt`（transcare 的同句被注释掉，不算）；`e-BOXER（ストロングハイブリッド）` = **HEV**（シリーズ・パラレル + EVドライブモード），`e-SMART HYBRID` = HEV（100%モーター但官网无増程字样）；生産終了旧 e-BOXER 9 档与福祉車両 3 卡全链路无价 → `官网无价格`；全站无年式，17 份 specifications.pdf 是 **Adobe-Japan1 CID 抽不出日文**，页脚 `2026.09` 是文档日期不是年款 → 一律 `官网无年款` |
+| Maserati | 部分公开价 | 当前日本配置器 6 车系 11 版本；build 链接现取 modelCode/modelName，`carGrid/107/<modelCode>` 的 `general.price` 为基础 MSRP，`countryProp` 取完整动力标签及 MY27；GranCabrio Trofeo 实时价 28,700,000 优先于起价卡 28,670,000；MCPURA/Cielo 无公开价，GT2 MY27 价未核实，未套用无年款的历史新闻价 |
+| McLaren | 官网不标价 | `www.mclaren.com/jp` 404 → 日本站在 `/cars/jp_ja`；CMS `mainnav?site=10` 给 12 个车型条目；配置器 5 个 profile 的 `ajaxGetConfigPrices` 全 `items:[]`，`showPriceSummary`/`showPricesByCountry` 均 `false` → 12 条全 `官网无价格`；官网/配置器/官方 PDF 无 MY → `官网无年款` |
 
-> 详段：sites/jp.md（2 段）
+> 详段：sites/jp.md（9 段）
 
 ### 新西兰 NZ / 菲律宾 PH / 全球
 

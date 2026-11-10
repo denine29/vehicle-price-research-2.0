@@ -39,7 +39,8 @@ const blocks = h3.filter(n => n > start && n < stop).map(s => {
   const e = (h3.find(n => n > s) || stop) - 1;
   return { s, e, title: L[s - 1].replace(/^### /, '') };
 });
-if (blocks.length !== 15) console.log('[WARN] 索引市场块数=' + blocks.length + '（预期 14，新增市场时忽略此提示）');
+const marketFiles = fs.readdirSync(DIR).filter(f => f.endsWith('.md') && !f.startsWith('_')).length;
+if (blocks.length !== marketFiles) console.log('[WARN] 索引市场块数=' + blocks.length + ' ≠ 市场文件数 ' + marketFiles);
 
 const errors = [], warns = [];
 const mapPath = path.join(DIR, '_map.json');

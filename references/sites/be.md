@@ -1,6 +1,6 @@
 # 比利时 BE — 站点坑位详段
 
-> 市场码 BE · 11 段 · 品牌：CUPRA / KGM / KG Mobility / Citroën / Škoda / Volvo / SEAT / Hyundai / Mitsubishi / MG / Maxus
+> 市场码 BE · 12 段 · 品牌：CUPRA / KGM / KG Mobility / Citroën / Škoda / Volvo / SEAT / Hyundai / Mitsubishi / MG / Maxus / Subaru
 > 返回索引 [../sites.md](../sites.md)（含通用方法 / 止损判定 / 集团级套路）
 > 最后实测：2026-10-30 · 文中 snapshotVersion / token / 车型 id 均为当时实测值，必须现取
 
@@ -858,3 +858,21 @@ Referer: https://www.hyundai.com/
 - **★ 坑**：`DELIVER 9` 有一个 CMS 条目名 `Deliver9 Luxury 2024`，图片素材名 `deliver9-my24-*` —— 都不是 MY 标示，不能当成年款。
 - **★ 价目 PDF 不存在**：`/nl/prijslijsten` 只收表单邮件发送，别去找 PDF。
 - **★ 年款**：无 modeljaar/bouwjaar/MY；页面 2026 只有活动期 `Actie geldig van 01-10-2026 tot en met 31-10-2026.` → `官网无年款`。
+
+---
+
+### Subaru（BE 比利时 `www.subaru.be`：车型页版本卡 + 官方 Prijslijst PDF 双源交叉，e-BOXER 判 MHEV）✅
+
+- **可达性**：`curl` 全通（2026-10-29），无封锁；⚠ 目录 URL **不要带尾斜杠**（`/nl-be/modellen` 带 `/` 会 301，返回 168 字节空体）。
+- **在售全集**：`/nl-be/modellen` 导航与 sitemap 均只列 **5 个车系**：Uncharted / Solterra / E-Outback / Crosstrek / Forester。
+- **★ 两个官方源交叉（5/5 逐车系集合相等）**
+  1. 车型页 `version-slider` 版本卡：`<版本名> Vanaf € <价>`；
+  2. 官方 Prijslijst PDF（`Prijslijst downloaden`）：列 `Catalogusprijs excl. BTW` / `Catalogusprijs incl. BTW`。
+  PDF 用 `pdftotext -table`（`-layout` 会把列交错，不可用）。
+- **含税**：`29.747,93 × 1,21 = 35.994,99 ≈ 35.995`（Crosstrek 2.0i Comfort）→ 取 incl. BTW。
+- **年款**：各车系 PDF 脚注逐字 `modeljaar 26`（Uncharted / Solterra `vanaf 1 januari 2026`、E-Outback `1 april 2026`、Forester `1 december 2025`、Crosstrek `Prijslijst per 1 januari 2026`）→ 统一 `MY26`。
+- **★ 燃油**：Crosstrek / Forester 为 **e-BOXER** —— specsheet 逐字 `2.0i directe injectie + elektromotor (e-BOXER)`、`Benzine hybride`、`Elektromotor: Max. vermogen 12,3 (16,7) kW (pk), Max. koppel 66 Nm`、`Tractiebattery: Type Lithium ion batterij, Nominale spanning 118,4 V`，全站无纯电续航/纯电模式/外接充电 → **MHEV**；Uncharted / Solterra / E-Outback 只有 `Batterij capaciteit` 与 `Rijbereik WLTP` → **BEV**。
+  ⚠ **跨市场**：JP 的新一代 e-BOXER 是 `ストロングハイブリッド`（有 EV 模式、约 30 km/h 以下可纯电）→ **HEV**；**同名不同代，别把 BE 的 12,3 kW 轻混参数套到 JP，也别把 JP 的 HEV 结论套回 BE**（见 `sites/jp.md` Subaru 段）。
+- **来源**：`https://www.subaru.be/nl-be/modellen`、各车型页、5 份 Prijslijst PDF（例 `https://www.subaru.be/media/fp1dbcbz/price_benl_26cro_jan2026.pdf`）、specsheet `https://www.subaru.be/media/4isg25oa/for_specsheet_nl_jan2026.pdf`
+- **实测**：2026-10-29
+- **交付结果**：`Subaru_BE_官网价_20261029.xlsx`，**13 条 / 5 车系**（BEV 7 / MHEV 6）。

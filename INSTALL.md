@@ -51,7 +51,7 @@ vehicle-price-research/
 ├── examples/                    ★ 3 份现行规范样例（双 sheet）+ legacy/ 7 份历史单 sheet + README
 ├── references/
 │   ├── sites.md                 索引 + 通用方法 + 止损判定（约 260 行）
-│   ├── sites/                   14 个市场详段：be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/global
+│   ├── sites/                   15 个市场详段：be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/global
 │   │                            + _map.json（段→文件映射）+ _template.md（新市场/新站模板）
 │   └── workflow.md              给不支持 skill 的 agent 用的可复制提示词模板
 └── scripts/
@@ -97,6 +97,6 @@ vehicle-price-research/
 ## 已覆盖市场
 
 西班牙 ES · 比利时 BE · 丹麦 DK · 智利 CL · 希腊 GR · 泰国 TH · 美国 US · 印度 IN · 韩国 KR ·
-英国 UK · 德国 DE · 法国 FR · 新西兰 NZ · 菲律宾 PH · 澳大利亚 AU · 全球站
+英国 UK · 德国 DE · 法国 FR · 新西兰 NZ · 菲律宾 PH · 澳大利亚 AU · 日本 JP · 全球站
 
 共 50+ 个品牌站点，其中 ✅ 可采 30+ 个。
