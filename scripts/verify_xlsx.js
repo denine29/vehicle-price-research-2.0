@@ -83,6 +83,7 @@ const autoRange = ws => {
   if (!af) add('未设置自动筛选');
   else if (af !== wantAf) add(`筛选范围 ${af} ≠ ${wantAf}`);
 
+  const mainRows = [];
   for (let r = 2; r <= last; r++) {
     const e = ws.getCell(r, 5);
     if (e.numFmt !== '@') add(`第${r}行 E 列格式 ${JSON.stringify(e.numFmt)} ≠ "@"`);
@@ -98,7 +99,17 @@ const autoRange = ws => {
     const d = cellText(ws.getCell(r, 7)).trim();
     if (!/^\d{8}$/.test(d)) add(`第${r}行 数据日期不是 YYYYMMDD 文本: ${d}`);
     else if (wantDate && d !== wantDate) add(`第${r}行 数据日期 ${d} ≠ ${wantDate}`);
+    mainRows.push({ r, brand: cellText(ws.getCell(r, 1)).trim(), model: cellText(ws.getCell(r, 2)).trim(), version: cellText(ws.getCell(r, 3)).trim(), year: cellText(ws.getCell(r, 4)).trim() });
   }
+
+  // 重复型号行：品牌+车型+型号名 必须唯一（同名不同价应加后缀）
+  const keyRows = new Map();
+  for (const m of mainRows) {
+    const k = m.brand + '|' + m.model + '|' + m.version;
+    if (!keyRows.has(k)) keyRows.set(k, []);
+    keyRows.get(k).push(m.r);
+  }
+  for (const [k, rs] of keyRows) if (rs.length > 1) add('重复型号行: ' + k + '（第 ' + rs.join('/') + ' 行）');
 
   // ===== 与源数据比对 =====
   if (rowsPath) {
@@ -148,6 +159,16 @@ const autoRange = ws => {
       else sum += n;
       if (!cellText(ws2.getCell(r, 6)).trim()) add(`副表第${r}行 缺「官网原文（逐字）」`);
       if (!cellText(ws2.getCell(r, 7)).trim()) add(`副表第${r}行 缺「来源位置」`);
+    }
+    const groupYears = new Map();
+    for (let r = 2; r <= l2; r++) {
+      const k = cellText(ws2.getCell(r, 1)).trim() + '|' + cellText(ws2.getCell(r, 2)).trim();
+      if (!groupYears.has(k)) groupYears.set(k, new Set());
+      groupYears.get(k).add(cellText(ws2.getCell(r, 3)).trim());
+    }
+    for (const m of mainRows) {
+      const set = groupYears.get(m.brand + '|' + m.model);
+      if (set && !set.has(m.year)) add('第' + m.r + '行 年款 ' + m.year + ' 与副表分组年款 [' + [...set].join('/') + '] 不一致');
     }
     if (sum !== dataRows) add(`副表覆盖型号数合计 ${sum} ≠ 主表行数 ${dataRows}`);
     if (basisPath) {

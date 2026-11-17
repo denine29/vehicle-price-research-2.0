@@ -36,7 +36,8 @@ const sha = a => crypto.createHash('sha256').update(a.join('\n')).digest('hex');
 const cleanBrand = t => {
   let b = t.split('（')[0].replace(/🇬🇧/g, '').trim();
   b = b.replace(/\s*·.*$/, '');
-  b = b.replace(/\s+(BE|DE|UK|IN|TH|FR|ES|GR|CL|KR|India|Bharat|EU\/DE)$/, '');
+  b = b.replace(/\s+[—–-]{1,2}\s.*$/, '');
+  b = b.replace(/\s+(BE|DE|UK|IN|TH|FR|ES|GR|CL|KR|AU|JP|AR|NZ|PH|India|Bharat|EU\/DE)$/, '');
   return b.replace(/\s+/g, ' ').trim();
 };
 const clean = s => s.replace(/\s+$/, '');

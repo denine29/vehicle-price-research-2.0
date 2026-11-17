@@ -58,6 +58,8 @@ function fuelClass(v) {
   if (FUEL[low]) return FUEL[low];
   if (Object.values(FUEL).includes(s)) return s;
   if (ALIAS[low]) return ALIAS[low];
+  // 双燃料（汽油+燃气两套燃料）不是混动，必须先于混动链判定；否则复合串里的已判对标签会被丢成「未标注」
+  if (/\bdual[\s-]?fuel\b|双燃料|\bbi[\s-]?fuel\b/i.test(s)) return 'Dual Fuel';
   for (const [name, test] of HYBRID_STEPS) if (test(s)) return name;
   for (const [re, name] of FUEL_WORDS) if (re.test(s)) return name;
   return '未标注';

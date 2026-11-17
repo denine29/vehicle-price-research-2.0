@@ -1,5 +1,7 @@
 # vehicle-price-research
 
+> 知识库版本：2026-11-17 · 16 市场 / 118 段 · 交付前跑 `node scripts/check_all.js`（生成器自测 + 知识库一致性）
+
 「品牌 × 市场」官网 MSRP 采集 → 统一 8 列 XLSX（+ 年款依据副表）。
 
 ## 开工前（任何 agent 都要先做这三步）
@@ -23,9 +25,9 @@ node scripts/verify_xlsx.js <xlsx> <rows.json> --basis year_basis.json --money e
 ```
 SKILL.md                主规则（格式 / 口径 / 流程 / 反爬 A–E / 自检清单）
 references/sites.md     索引 + 通用方法 + 止损判定（约 260 行）
-references/sites/*.md   15 个市场详段 + _map.json + _template.md
+references/sites/*.md   16 个市场详段 + _map.json + _template.md
 scripts/                triage.js（分诊）/ write_xlsx.js（唯一生成器）/ selftest.js / check_sites.js / update_sites_meta.js
-examples/               10 份真实交付样例（3 份现行规范 + 7 份 legacy）+ README
+examples/               11 份真实交付样例（4 份现行规范 + 7 份 legacy）+ README
 ```
 
 ## 维护知识库（加新站 / 新国家）

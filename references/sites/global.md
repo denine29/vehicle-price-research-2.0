@@ -1,8 +1,8 @@
 # 新西兰 NZ / 菲律宾 PH / 全球 — 站点坑位详段
 
-> 市场码 GLOBAL · 4 段 · 品牌：Mercedes-Benz / Aston Martin / IM Motors 智己
+> 市场码 GLOBAL · 5 段 · 品牌：Mercedes-Benz / Aston Martin / IM Motors 智己 / Rolls-Royce 劳斯莱斯
 > 返回索引 [../sites.md](../sites.md)（含通用方法 / 止损判定 / 集团级套路）
-> 最后实测：2026-10-30 · 文中 snapshotVersion / token / 车型 id 均为当时实测值，必须现取
+> 最后实测：2026-11-16 · 文中 snapshotVersion / token / 车型 id 均为当时实测值，必须现取
 
 ---
 
@@ -67,3 +67,18 @@
 | BMW PH | 车型页无价，藏在 PDF | `BMW Price List` 按钮 → S3 上的价目 PDF（**沙箱封 `*.s3.amazonaws.com`**） |
 | 法拉利（全球） | 官方从不公布售价 | 仅经销商询价，**无法采集 MSRP** |
 | Aston Martin（全球含 ES / DE） | 官方从不公布售价；配置器全链路无价格字段 | 仅经销商报价；**仍出表**，MSRP 填 `官网无价格`（DE 24 行已交付，详见下） |
+
+---
+
+### Rolls-Royce 劳斯莱斯（全球 `www.rolls-roycemotorcars.com`：官网**全站不公布售价**；沙箱出口被 302 到中国站）⚠️ 无价格出表
+
+- **可达性**：`curl` 对 `/`、`/en_US/home.html` 均 **000**（一次 25 s 无响应、一次 `curl exit 92` HTTP/2 流被断）；`openssl s_client` 握手正常、证书 `CN=www.rolls-roycemotorcars.com` 由 Let's Encrypt 签发 → **Akamai 拦非浏览器指纹**。真浏览器 200，但**按出口 IP 302 → `www.rolls-roycemotorcars.com.cn/zh_CN/`**（指定 `/en_GB/`、`/en_US/` 路径也照样跳中国站）
+- **★ 取价结论：官网不标价**。三类证据同时成立：① 中国站 7 个车型页全文 `¥/￥/RMB/价格/指导价` **0 命中**（唯一 `万` 出现在「万境归臻」「万象息声」等营销文案）；② 英美站（WebFetch 外部出口）showroom / 配置器入口 / 车型页均**无任何金额**；③ 购车 CTA 只有 `Enquire`、`Find a dealer`、`Commission`，配置器页逐字「**This is to only be used as a guide and we advise to confirm your design with your local dealership.**」
+- **在售范围**：`/showroom` 导航 7 项 = Phantom · Phantom Extended · Spectre Series II · Ghost · Ghost Extended · Cullinan · Black Badge；Black Badge 族下 3 款（**Black Badge Spectre Series II / Black Badge Ghost / Black Badge Cullinan**）→ 主表 9 行（车型级；官网无 trim 概念，全走 Bespoke 定制）
+- **年款**：全站 `Model Year` / `MY2x` / `modelYear` **0 命中**；`Spectre` 的 `Series II` 是产品代号不是年款 → 全部「官网无年款」
+- **燃油**：车型页 WLTP 段逐字可判 —— Phantom「Fuel consumption: 17.8-18.2 mpg / 15.9 -15.5 l/100km；CO2 emissions: 361-351 g/km」→ **Gasoline**；Spectre「Electric range: 390–362 miles, 628–582 km；CO2 emissions: 0g/km」→ **BEV**（Black Badge 款沿用母车型动力）
+- **坑**：① 无 `configurator.` 子域（DNS 不存在），配置器就是 `/bespoke/configure-your-rolls-royce.html` 一个引导页，**全程不显示金额**；② 别把 dealer 站的「现车价」当 MSRP；③ `/en_US/showroom/spectre/spectre-in-detail.html` 这类拼出来的路径是 404，正确形式是 `/showroom/spectre-in-detail.html`
+- **实测**：2026-11-16（2026-11-11 首次）
+- **来源**：`https://www.rolls-roycemotorcars.com/en_GB/showroom.html`（车型全集）、`…/en_GB/showroom/{phantom,ghost,cullinan,spectre}.html`（WLTP + CTA）、`…/en_US/bespoke/configure-your-rolls-royce.html`（配置器免责声明）、`https://www.rolls-roycemotorcars.com.cn/zh_CN/showroom/*.html`（0 价格复核）
+- **原文**：`Enquire` · `WLTP combined: CO2 emissions: 361-351 g/km; Fuel consumption: 17.8-18.2 mpg / 15.9 -15.5 l/100km.` · `Electric range: 390–362 miles, 628–582 km. CO2 emissions: 0g/km.` · `Can you give me the prices of your models? The prices of our model range would depend on the specification.`
+- **交付结果**：`Rolls-Royce_GLOBAL_官网价_20261116.xlsx`，**9 条**，MSRP 全填 `官网无价格`；燃油 **Gasoline 7 · BEV 2**（仅 Spectre Series II 与 Black Badge Spectre Series II 为 BEV）；年款全「官网无年款」。

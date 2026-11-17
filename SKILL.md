@@ -5,6 +5,8 @@ description: 车型官网价格调研与采集。当用户要求"查某品牌某
 
 # 车型官网价格调研
 
+> 知识库版本：2026-11-17 · 16 市场 / 118 段（计数以 `node scripts/check_sites.js` 输出为准）
+
 为「某品牌 × 某市场」官网抓取全部在售车型**官方建议零售价（MSRP）**，交付统一格式 **XLSX（8 列，含燃油分类）**。
 
 ## 何时使用
@@ -17,7 +19,7 @@ description: 车型官网价格调研与采集。当用户要求"查某品牌某
 
 ## 一、输出格式（最高优先级，必须逐字遵守）
 
-> 📂 **拿不准格式长什么样，先打开 `examples/`**：10 份真实交付过的成品 = **3 份现行规范**（`CUPRA_BE` 93 行、`Subaru_BE` 13 行、`Kia_AU` 98 行，8 列 + 年款依据双 sheet）+ **7 份历史单 sheet**（在 `examples/legacy/`，只看主表写法）。`examples/README.md` 说明了每份「要你看什么」，末尾 6 条反面教材。
+> 📂 **拿不准格式长什么样，先打开 `examples/`**：11 份真实交付过的成品 = **4 份现行规范**（`CUPRA_BE` 93 行、`Subaru_BE` 13 行、`Kia_AU` 98 行、`Mazda_FR` 123 行，8 列 + 年款依据双 sheet）+ **7 份历史单 sheet**（在 `examples/legacy/`，只看主表写法）。`examples/README.md` 说明了每份「要你看什么」，末尾 6 条反面教材。
 > ⚠️ `legacy/` 里的只有一张表、sheet 名也不是「官网价」，**不要照抄结构**；新交付一律 2 张表（官网价 + 年款依据 7 列），口径写交付说明。
 
 **只交付 XLSX，固定 8 列（2026-09-30 起生效；CSV 已取消）：**
@@ -124,6 +126,7 @@ description: 车型官网价格调研与采集。当用户要求"查某品牌某
 - `cash price`（现金价）一般不采；**只有官网唯一报价是现金价时才采**并备注。
 - 每条数据必须可回溯到来源 URL。
 - **上路价（OTR / drive-away）**：只在用户明确要求、或官网唯一报价形态就是上路价时采；采了必须在交付说明写明包含项（注册 / CTP / 印花税 / dealer delivery）与所用邮编或地区，**不得与裸车 MSRP 混在一张表里当同一口径比较**。
+  > AU 注意：sites/au.md 里大量「邮编 2000 / drive-away」是 2026-11 那批任务的**指定口径**，不是该市场默认；日常 AU 任务默认取官网 MSRP/RRP，除非用户明确要上路价。
 - **官网没标注含税性时**：价格照采照出表，但依据副表必须逐字记下官网对税价的全部表述（如只有 `Aanbevolen catalogusprijs`，或只写 `exclusief leveringskosten en milieubijdrage` 而没提 BTW/VAT）；**不得推断"含税/不含税"**，也不得用价格换算反推（没有 excl./incl. 双列时）。实例：Škoda BE 的 `modelPrice` 官网未标 BTW，双列的 Prijslijst PDF 下载返回 401 → 依据里写"官网未标注"。
 
 ### ⚠️ 关键坑：目录价 vs 促销价（Stellantis 系）
@@ -215,7 +218,7 @@ def eurofmt(p):
 >
 > **环境适配（2026-10-30）**：下面的 Playwright 代码块需要 Python + Playwright。只有 Node 的环境（如 Windows 本机）改用 `node scripts/triage.js <url>` 分诊、`curl --ssl-no-revoke` 直连、browser MCP 的页面内 `fetch` 抓 XHR/PDF；没有 `pdfinfo`/`tesseract` 时，PDF 版本看 `pdftotext` 首尾页文本，图片型 PDF 直接判"不可解析"并换源。
 >
-> **知识库结构（2026-10-30 起）**：`references/sites.md` 只是**索引 + 通用方法 + 止损判定**（约 260 行）；每个市场的坑位详段在 `references/sites/<market>.md`（`be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/global`，共 15 个）。
+> **知识库结构（2026-10-30 起）**：`references/sites.md` 只是**索引 + 通用方法 + 止损判定**（约 260 行）；每个市场的坑位详段在 `references/sites/<market>.md`（`be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/ar/global`，共 16 个）。
 > **用法**：先读索引 → **只读对应市场文件**（`grep -n "<品牌>"`）。不要整读，也**不要只看索引就动手**——字段名、正则、坑都在详段里。
 > **大文件分段读（2026-11-10）**：市场文件 >150 行时（`be`/`jp`/`au` 都 >200 行），先 `grep -n "^### "` 取段标题与行号，再 `sed -n 'a,bp'` **只读命中的那一段**；不要整读，也不要把整页 HTML / 完整 rows.json 打印进对话。
 >
@@ -230,6 +233,7 @@ def eurofmt(p):
 > 2. 拿不准的写进 `sites/_pending.md`（待复核区，不参与索引与校验），确认后再合并到正式市场文件。
 > 3. 每条新增段至少含：`实测：YYYY-MM-DD`、`来源：URL`、`原文："…"`；缺证据视为未完成。
 > 4. 交付说明里列出「本次回写了哪些段」，便于人工复核。
+> 5. **同品牌跨市场一致性**：给一个已有别市场记录的品牌写新段前，先 grep 该品牌名（references/sites/*.md）看其他市场怎么判（尤其燃油、价格口径、接口端点），并在新段里**显式写出差异**（例：e-BOXER 在 BE=MHEV、JP=HEV；Škoda 的 GetTrimlinesPrices 在 BE 是促销价禁用、AU 是 MRDP）。不写差异，下一个人会套错。
 
 ### A. 站点打不开 → 先判封锁级别
 
@@ -371,7 +375,7 @@ with sync_playwright() as p:
 
 ## 参考文件（本 skill 自包含，不依赖外部路径）
 
-- `references/sites.md` — **索引 + 通用方法 + 止损判定**；详段在 `references/sites/<market>.md`（15 个市场文件，`_map.json` 为机器可读映射）
+- `references/sites.md` — **索引 + 通用方法 + 止损判定**；详段在 `references/sites/<market>.md`（16 个市场文件，`_map.json` 为机器可读映射）
 - `references/workflow.md` — 详细工作流与可复制提示词模板（给不支持 skill 的 agent 用）
 - `scripts/triage.js` — **站点可达性分诊（Node 版，优先用这个）**；`triage.py` 是同上的 Python 版
 - `scripts/fetch_pdf.py` — Akamai PDF 破封脚本（先 `ctx.request.get`，跨域也能下；再回退浏览器内 fetch）

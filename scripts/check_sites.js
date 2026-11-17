@@ -45,11 +45,11 @@ if (blocks.length !== marketFiles) console.log('[WARN] 索引市场块数=' + bl
 const errors = [], warns = [];
 const mapPath = path.join(DIR, '_map.json');
 const map = fs.existsSync(mapPath) ? JSON.parse(fs.readFileSync(mapPath, 'utf8')) : { markets: {} };
-let totalSections = 0, coveredSections = 0;
+let totalSections = 0, coveredSections = 0, noMeasured = 0, noSource = 0;
 
 for (const b of blocks) {
   const title = b.title;
-  const m = /(ES|BE|DK|CL|TH|US|IN|KR|UK|DE|FR|GR|AU|JP)$/.exec(title.replace(/\s+/g, ' ').trim());
+  const m = /([A-Z]{2})$/.exec(title.replace(/\s+/g, ' ').trim());
   const key = m ? m[1].toLowerCase() : 'global';
   const rows = [];
   let pointer = null;
@@ -79,6 +79,10 @@ for (const b of blocks) {
   rows.forEach(r => splitBrands(r).forEach(x => indexBrands.add(x)));
   hs.forEach((s, i) => {
     totalSections++;
+    const eEnd = i + 1 < hs.length ? hs[i + 1] - 1 : FL.length;
+    const body = FL.slice(s - 1, eEnd).join(String.fromCharCode(10));
+    if (!/实测/.test(body) && !/20..-..-../.test(body)) noMeasured++;
+    if (!/来源|https?:/.test(body)) noSource++;
     const t = FL[s - 1].replace(/^### /, '');
     if (/其它市场速记/.test(t)) { coveredSections++; return; }
     const parts = splitBrands(t.split('（')[0]).map(x => ALIAS[x] || x);
@@ -106,6 +110,8 @@ for (const b of blocks) {
   if (n) noDetail.push(key + ':' + n);
 }
 console.log('\n索引品牌行: ' + noDetail.join(' '));
+if (noMeasured) console.log('[WARN] ' + noMeasured + ' 段缺「实测/日期」字段（新段必须补，旧段慢慢补）');
+if (noSource) console.log('[WARN] ' + noSource + ' 段缺「来源」字段');
 console.log('段覆盖: ' + coveredSections + '/' + totalSections);
 warns.forEach(w => console.log('[WARN] ' + w));
 if (errors.length) { console.log('\n[FAIL] ' + errors.length + ' 项:'); errors.forEach(e => console.log('  - ' + e)); process.exit(1); }

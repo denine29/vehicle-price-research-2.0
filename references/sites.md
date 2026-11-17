@@ -162,8 +162,29 @@
 |---|---|---|
 | Mitsubishi | ✅ | `www.mitsubishi-motors.fr` curl 一律 **445 空响应**（本机 TLS 指纹被 nginx 拒），只能浏览器同源 `fetch()`；价格在**车型页「Niveaux de finition」块的 `À partir de X,00 €`**，⚠ 首页/hero 的 `À partir de` 混的是促销价 |
 | Citroën | ✅ | `store.citroen.fr` Next.js 在线商店 + 单一 GraphQL 端点，**curl 直连一次拿全量**（无需浏览器）；与 BE 的 sccf 静态库不同 |
+| Suzuki | ✅ | `www.suzuki.fr` / `configurateur.suzuki.fr` curl 全 403（Azure App Gateway），真浏览器同源 `fetch()`：`/api/models` → `/api/motorizations?model=<数字id>` → `/api/versions?model=&motorization=`；取 `priceB2B`，**不取** `priceB2C`（扣 remise+reprise） |
+| Toyota | ✅ | `www.toyota.fr` curl 403（Akamai）；价格走 `cocadap.toyota-europe.com/.../comparegradespecsv2/<modelId>` 的 `from.list`（catalogue MSRP，**不取** `listWithDiscount` 页面 remisé），全名/动力走 `texus.../GetFullConfiguration` 的 `Car.Name`；**年款看官网明标 MY**：金融方案脚注/手册标题/新闻稿逐字给 `MY26`/`MY27`（API 无 modelYear 字段）；Mirai/Proace Verso 特例；GR GT 未来车型不入表 |
+| Ford | ✅ | `www.ford.fr` curl 000（Akamai edgekey）；版本价在官方 `pricelist` PDF 的 `Tarif maximum TTC` 表（pdf.js 按 x/y 坐标把价格映射到 finition 列），年款取首页 `Année modèle 20xx`；**Ranger/Transit/Tourneo 另表（穷举 167 条）**：配置器 ngc2 复合配置码 `CATALOG~SERIES_BODY_..._VS-...` 逐条取 `load.price`，Ranger/Transit 为 HT、Tourneo 为 TTC，不可横比；Mustang GTD 无价不入表 |
+| Fiat | ✅ | `omni/configurateur` 总览卡同时写 `Prix en ligne`（折扣，不采）与 `Prix catalogue`；全量目录价在静态库 `…/fccf_mv/scope/3109200.json` → `CM_T5_3109200_<code>.json` 的 `Vehs[].PriceArray[3]`（含 VAT），13 个 comMod / 62 版本；版本名 = `ComVersDes` + `Moteur` 官方动力串；年款取官网页脚 `FIAT-ABARTH_POSTER_CONSO_04-2026.pdf` 抬头 `ANNÉE MODÈLE 2026` → MY2026；Topolino 另有官方手册价 9 990/10 490/11 490（无年款） |
+| Geely | ✅ | `www.geelyauto.fr` curl 直通（Nuxt SSR），**无配置器**；页内只有车系起价（`Prix de vente conseillé à partir de … TTC`，`soit … après remise` 是促销不采），变体价只在官方 brochure PDF 末页 `Tarifs clients TTC`（每 finition 一列一价）；⚠ E2 的 brochure 是图片型（text stream 仅 2 个），须渲染成图目视读价；年款全站无 MY → 「官网无年款」 |
+| Jaguar | ⛔ | `www.jaguar.com/fr-fr` curl 301→200 无 WAF，但**自 2024-11 起停售新车**：Support FAQ 逐字 `À compter de novembre 2024, nous arrêterons les ventes de véhicules Jaguar neufs …`，首页只剩 Type 01 概念车 / Approved 二手车 / 售后；sitemap 除 dealer locator 外 0 车型页，`f-pace/i-pace/e-pace/xf/f-type/configurator` 全 404；Type 01 明写 `pas encore disponibles à la vente` → **不出表** |
+| Cadillac | ✅ | `www.cadillaceurope.com/fr-fr` 配置器 `/fr-fr/design/<model>` **curl 直连即 200**（Akamai 间歇 403，重试可破），HTML 内嵌 per-trim `trim.prices.msrp.value` + `carline.modelYear`；概览页 JSON-LD `modelDate=2026` 且 OPTIQ 价滞后（69.5k），以配置器为准；法国在售 4 款纯电 SUV，共 9 trim（OPTIQ 2/LYRIQ 2/LYRIQ-V 1/VISTIQ 4） |
+| Zeekr | ✅ | `shop.zeekr.eu/fr-fr/configuration` SPA（curl 只返回 404 壳，需 Playwright 渲染）；底层 API `gateway-pub-azure.zeekr.eu/panda/api/c/item/`：`getOpenCarModel`(countryCode=FR) 取车型树 + `queryCarModels` 取版本价（均需浏览器内调用，curl 报 401 signature） |
+| Land Rover | ✅ | `rules.config.landrover.com/rc/lr/fr_fr/{车系}_{k27}/.jsonp` **curl 直连**（主站车型页只有车身级起价）；`feature-list` 的 `PRODUCT` 组 = 全部型号 + `price.RETAIL` 含税价，`property.definition` 首段补 LWB/110/130 车身写法 |
+| Genesis | ⚠️ | `org-eu.genesis.com/eu/papi` 本机 **TCP 443 不通**（浏览器内 fetch 亦 Failed）→ 走 **GraphQL over GET + 外部抓取通道**；`gppTrims` 的 `minPriceGross` 即型号级 TTC 起价，年款见 `gppFscs.modelYear` |
+| Lancia | ✅ | 主站 Akamai 封 curl（robots 也 403）/ 真浏览器通；无 `store.` 子域 → 走 **Omnichannel 配置器** `/omni/configurateur/#/`：`ncs/retrieve` 一次拿 6 车系起价，版本价读「Prix catalogue」；⚠ hash 不重载，每台车先 `about:blank` |
+| Renault | ✅ | `www.renault.fr` APP_STATE 取车系 → `fr.co.rplug.renault.com` curl 直连：`/pricelist/<base>` 的 **PVC**=TTC 未折扣 MSRP（页面 `PVCBONADOBE` 的 From 扣 3620 € CEE 奖金，不采）；在售集=`/category`==`impact` VersionId；燃油按 `PT5662`；**年款取版本名末缀 - 26/-26b→2026、- 27→2027，c2gMillesime 是冻结产品代号非年款（与 ES 相反）**；T3E 官网无价格、SpaceNomad 未核实、Duo 属 Mobilize 不入表；**Grand Kangoo 5/7 places 是两个独立配置器产品（5 座入口 mtc 带 `_slash_0P3RAN`），5 座 = PVC − 500，须拆行**；`confOptimum` 是实时配置价 ≠ PVC；`prix-versions` 的 SRP/`startingPrice` = 5 座价、headline `displayPrice` = 7 座价 |
 
-> 详段：sites/fr.md（2 段）
+| Lexus | ✅ | `www.lexus.fr` curl 403（Akamai errors.edgesuite.net），真浏览器可开；车型 UUID 读任一配置器页 `window.dxp.settings.modelMap`，变体价走 `cocadap.toyota-europe.com/lexus/fr/fr/comparegradespecsv2/<UUID>` 的 `from.list`（22 条均 == `listWithDiscount`，无折扣；`default` 含金属漆 +1 200 不取）；年款 LBX/UX/NX=`MY26`（方案脚注/手册封面）、RZ/ES=`2026`、RX=`2027`（车型页 JSON-LD `vehicleModelDate`）、LM=`官网无年款`；TZ 2027 未来车型不入表 |
+
+| Lotus | ✅ | `www.lotuscars.com/fr-FR` curl 200 无 WAF；产品树 `configurator.prd.../products/products/FR` 取 `MHP_*` 变体码，价格走 **`ruler/pricing/<MODEL>/FR/<CODE>` 的 `retailPrice`**（未折扣 MSRP）；⚠ Emeya `/models` 卡片价统一比 API 低 3 200（促销展示价，不采）；Eletre X=PHEV、Eletre/Emeya/Evija=BEV、Emira=Gasoline；Evija 无价；年款全「官网无年款」 |
+
+| Leapmotor | ✅ | `www.leapmotor.net/fr-fr` curl TLS reset、真浏览器可开；Next.js offers payload 的 **`product.originalPrice` = 目录价**，页面 « Prix promotionnel » / « à partir de » 是扣 CEE/prime 后的促销价不采；7 在售车系（T03/B03X/B05/B10/B10 e-Hybrid/C10/C10 e-Hybrid），B03 未开售不入表；e-Hybrid = `prolongateur d'autonomie` → **REEV** |
+| Lynk & Co | ✅ | `me.lynkco.com/fr-fr` curl 200；页面 `{buyPrice}` 占位符被拦不渲染，但官方 Sitecore GraphQL `POST cd.web.lynkco.biz/api/lynkco-global-portal` 的 `buyPriceQuery`（root `/Global Setting/BuyPrices/BuyPrices`）只给 **Core 起价** 01=41 495 / 02=35 995 / 08=53 995；**More 取官方新闻稿** 45 495 / 39 995 / 57 995 → 6 条（每款 Core+More）；02 年款 **MY27**（官方 MY27 新闻稿），01/08 官网无年款 |
+
+| Lamborghini | ⚠️ 无价格出表 | `www.lamborghini.com/fr-en` curl 200；官网**不公布法国 MSRP**：车型页 JSON-LD 无 offers/price、配置器无 €/amount、CTA 只有 « Faire une demande » / `ENQUIRE`；配置器 5 个车型 **Temerario / Revuelto / Revuelto SV / Urus SE / Urus SE Performante** 全部入表，MSRP 全 `官网无价格`（前 3 个官网标「未开售」但按缺价规则仍出行）；5 个 ENQUIRE 表单均逐字 `2027 Lamborghini …` → 年款 2027；均 PHEV |
+
+> 详段：sites/fr.md（20 段）
 
 ### 希腊 GR
 
@@ -210,6 +231,14 @@
 
 > 详段：sites/jp.md（9 段）
 
+### 阿根廷 AR
+
+| 品牌 | 结论 | 数据源 / 一句话方法 |
+|---|---|---|
+| Ferrari | 官网不标价 | `www.ferrari.com/en-AR` 302 → `/es-AR`；`/es-AR/auto/gama` 的 Next.js `blocks` 给 19 个 CarBanner（Gama 11 + Serie especial 5 + Serie Icona 3）；车型页/配置器 0 个 `price` 字段、0 个金额，CTA 只有 `CONFIGURACIÓN`/`SOLICITAR INFORMACIÓN` → 19 条全 `官网无价格`；`listingData.year` 是上市/列表年、非 MY → `官网无年款` |
+
+> 详段：sites/ar.md（1 段）
+
 ### 新西兰 NZ / 菲律宾 PH / 全球
 
 | 品牌 | 结论 | 数据源 / 一句话方法 |
@@ -224,8 +253,9 @@
 | 领克 | ❌ | 按出口 IP 地理跳转 `.com.cn`，需海外代理 |
 | 法拉利 / Aston Martin | ❌ | 官方从不公布售价，仅经销商询价 |
 | IM Motors 智己 | ❌ | 站点全通但 API 只有规格表，0 价格字段 |
+| Rolls-Royce 劳斯莱斯 | ⚠️ 无价格出表 | 官网**全站不标价**（中/英/美三站 0 个价格，CTA 只有 `Enquire`；配置器页写明须与经销商确认）→ 仍出表，MSRP 填 `官网无价格`；⚠ 沙箱出口被 302 到 `.com.cn` |
 
-> 详段：sites/global.md（4 段）
+> 详段：sites/global.md（5 段）
 
 > ⚠ **本索引与详段的关系**：本文件只是**路由 + 通用方法**；每个市场的踩坑细节（字段名、正则、失败过程）在 **`sites/<market>.md`**（各表末尾有「详段」指向）。两者冲突时以市场文件里的详段为准。
 > ⚠ **找不到对应市场文件时**：先按 `## 数据源定位方法（通用）` 走，采完把坑位追加到 `sites/<market>.md` 并在本索引加一行。
