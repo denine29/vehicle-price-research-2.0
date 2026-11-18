@@ -100,6 +100,24 @@ const mapOut = JSON.stringify(meta, null, 1);
 const oldMap = fs.existsSync(MAP) ? fs.readFileSync(MAP, 'utf8') : '';
 if (!dry && mapOut !== oldMap) { fs.writeFileSync(MAP, mapOut, 'utf8'); changes.push('_map.json 重建（' + files.length + ' 个市场，' + Object.values(meta.markets).reduce((a, x) => a + x.count, 0) + ' 段）'); }
 
+// 4) SKILL.md / README.md 的「知识库版本」行——计数是派生数据，不手工维护
+const marketsN = files.length;
+const sectionsN = Object.values(meta.markets).reduce((a, x) => a + x.count, 0);
+const d = new Date();
+const today = newDate || `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+for (const doc of ['SKILL.md', 'README.md']) {
+  const dp = path.resolve(__dirname, '..', doc);
+  if (!fs.existsSync(dp)) continue;
+  const raw = fs.readFileSync(dp, 'utf8');
+  const want = `知识库版本：${today} · ${marketsN} 市场 / ${sectionsN} 段`;
+  if (!/知识库版本：\d{4}-\d{2}-\d{2} · \d+ 市场 \/ \d+ 段/.test(raw)) { console.log('[WARN] ' + doc + ' 找不到「知识库版本」行，未同步计数'); continue; }
+  const next = raw.replace(/知识库版本：\d{4}-\d{2}-\d{2} · \d+ 市场 \/ \d+ 段/, want);
+  if (next !== raw) {
+    if (!dry) fs.writeFileSync(dp, next, 'utf8');
+    changes.push(doc + ' 版本行 → ' + today + ' · ' + marketsN + ' 市场 / ' + sectionsN + ' 段');
+  }
+}
+
 if (changes.length) { console.log((dry ? '[DRY] 将改动 ' : '已更新 ') + changes.length + ' 处：'); changes.forEach(c => console.log('  - ' + c)); }
 else console.log('已是最新，无需改动');
 console.log('提示：若 check_sites.js 报「孤儿段」，说明索引表缺对应品牌行——请在 sites.md 该市场表手工加一行（结论 + 一句话方法）后重跑。');

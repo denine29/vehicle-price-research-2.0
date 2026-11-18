@@ -48,10 +48,10 @@ cp -r vehicle-price-research ~/.claude/skills/
 vehicle-price-research/
 ├── SKILL.md                     主规则：格式 / 口径 / 流程 / 反爬按症状查表（A–E 五组）
 ├── INSTALL.md                   本文件
-├── examples/                    ★ 4 份现行规范样例（双 sheet）+ legacy/ 7 份历史单 sheet + README
+├── examples/                    ★ 5 份现行规范样例（双 sheet）+ legacy/ 7 份历史单 sheet + README
 ├── references/
 │   ├── sites.md                 索引 + 通用方法 + 止损判定（约 260 行）
-│   ├── sites/                   16 个市场详段：be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/ar/global
+│   ├── sites/                   分市场详段（be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/ar/br/global；段数以 check_sites 为准）
 │   │                            + _map.json（段→文件映射）+ _template.md（新市场/新站模板）
 │   └── workflow.md              给不支持 skill 的 agent 用的可复制提示词模板
 └── scripts/
@@ -63,19 +63,21 @@ vehicle-price-research/
     ├── check_all.js             ★ 一条命令跑 selftest + check_sites（交付前闸门）
     ├── update_sites_meta.js     ★ 知识库元信息同步（段数/品牌清单/_map.json 哈希，不动正文）
     ├── check_sites.js           ★ 知识库一致性检查：`node check_sites.js`（索引/段数/围栏/哈希）
-    ├── verify_xlsx.js          ★ 成品回读校验（结构 + 与 rows.json 逐行比对）
+    ├── verify_xlsx.js          ★ 成品回读校验（结构 + 年款/日期格式 + 与 rows.json 逐行比对）
+    ├── verify_dir.js           ★ 交付目录级校验（同品牌多文件 / _vN / 重复交付）
     └── format_output.py         旧版生成器（单 sheet / 仅欧元），已被 write_xlsx.js 取代
 ```
 
 ## examples/ 里有什么
 
-先看 **4 份现行规范**（8 列 + 年款依据 7 列，可逐项对照）；`legacy/` 里是 7 份历史单 sheet 样例，只看主表写法。
+先看 **5 份现行规范**（8 列 + 年款依据 7 列，可逐项对照）；`legacy/` 里是 7 份历史单 sheet 样例，只看主表写法。
 
 | 文件 | 条数 | 看点 |
 |---|---|---|
 | `CUPRA_BE` | 93 | **现行规范**；配置器 API 直取；BEV/Gasoline/MHEV/PHEV 四类按型号名逐字判定；年款取接口 `model_year` |
 | `Subaru_BE` | 13 | **现行规范**；两个官方源交叉且逐车系集合相等；年款依据逐字引 PDF 脚注；含税 `×1,21` 反算 |
 | `Mazda_FR` | 123 | **现行规范**；欧元点千分位；2026/2027 双年款；型号名原样并入动力/变速箱/驱动 |
+| `Mercedes-Benz_BR` | 36 | **现行规范**；BRL 点千分位 `139.990,00`；2025/2026/2027 并售 + 3 条官网无年款；`ano/modelo` 归一（`26/27→2027`） |
 | `Kia_AU` | 98 | **现行规范**；澳元上路价保留分（`--money comma2`）；年款取车型页标题（`2026 Kia …`）；22 组年款依据 |
 | `legacy/Mercedes-Benz_UK` | 403 | 规模上限；同名车系按动力拆分（`CLA` / `CLA Electric`） |
 | `legacy/Skoda_UK` | 133 | 全量 `MY2027`；五种动力并存 |

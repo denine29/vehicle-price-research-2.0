@@ -8,6 +8,7 @@
   },
   "scripts": {
     "selftest": "node selftest.js",
-    "check": "node check_all.js"
+    "check": "node check_all.js",
+    "verify-dir": "node verify_dir.js"
   }
 }

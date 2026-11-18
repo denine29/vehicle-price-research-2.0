@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16",
+ "generated": "2026-11-18",
  "source": "references/sites.md",
  "markets": {
   "ar": {
@@ -172,6 +172,170 @@
      "title": "Subaru（BE 比利时 `www.subaru.be`：车型页版本卡 + 官方 Prijslijst PDF 双源交叉，e-BOXER 判 MHEV）✅\r",
      "srcLine": 864,
      "sha256": "a5eae5ef093b0ecbb7c716acbe6e3b741364a45a22066d2f9805aaecf8bdcb86"
+    }
+   ]
+  },
+  "br": {
+   "file": "sites/br.md",
+   "count": 26,
+   "brands": [
+    "Agrale",
+    "Effa Motors",
+    "Ram",
+    "Troller",
+    "Jeep",
+    "MINI",
+    "BMW",
+    "Audi",
+    "Porsche",
+    "Avatr",
+    "Aston Martin",
+    "Mercedes-Benz",
+    "Honda",
+    "Peugeot",
+    "Volkswagen",
+    "Toyota",
+    "Ford",
+    "GAC / Aion / Hyptec",
+    "BYD",
+    "Fiat",
+    "ZEEKR",
+    "Geely",
+    "Land Rover",
+    "JAC Motors",
+    "Jaguar",
+    "Ferrari"
+   ],
+   "sections": [
+    {
+     "title": "Agrale（BR 巴西 `www.agrale.com.br`：**官网全站不公布价格；37 个在售产品型号，MSRP 全填 `官网无价格`**）⚠️ 无价格出表",
+     "srcLine": 17,
+     "sha256": "70ac4170245982158620c03c0d6946aa5c617be07fd463be80223d87c620a4e7"
+    },
+    {
+     "title": "Effa Motors（BR 巴西 `www.effamotors.com.br`：**Wix 站点；4 款核心 utilitários 均不公布价格，只有 WhatsApp 销售入口**）⚠️ 无价格出表",
+     "srcLine": 31,
+     "sha256": "007c0cbb292874d66b39649c111c0def8bf3697420e3767bcb429b6e7be91905"
+    },
+    {
+     "title": "Ram（BR 巴西 `www.ram.com.br`：curl 403；配置器静态价格 API 直出全量目录价，⚠ 预约接口是促销价）✅",
+     "srcLine": 45,
+     "sha256": "32050bfeeccfb9a2695551c28cfb704330a6e171d92a1c364bc4a9d4686d296b"
+    },
+    {
+     "title": "Troller（BR 巴西 `www.troller.com.br`：仅留档站点，官方已宣布 2021-09 停产，全站无价）✅",
+     "srcLine": 64,
+     "sha256": "9e9d2a6cd2dfdfb63592df6a5dc1eaca30cc1f9129f4d51e6e6e6800d7d1858c"
+    },
+    {
+     "title": "Jeep（BR 巴西 `www.jeep.com.br`：curl 直通；MVS 版本 + price-service 目录价一次拿全）✅",
+     "srcLine": 77,
+     "sha256": "17ca1db0507da3ba86b160aa084853f15303d9e4d7f0a28179cf03f88cfccc88"
+    },
+    {
+     "title": "MINI（BR 巴西 `www.mini.com.br` 官方价格表 PDF：**Ano/Modelo 列明确，18 个版本逐条有价**）✅",
+     "srcLine": 94,
+     "sha256": "5385b1482b48a3e0d0ae45be6bc370f441df4a4cd463e1c966b0a9b743f05179"
+    },
+    {
+     "title": "BMW（BR 巴西 `www.bmw.com.br/pt`：**curl TLS reset，真浏览器可开；all-models 卡片隐藏报价条款逐版本写 `ano/modelo`，与配置一一对应**）✅",
+     "srcLine": 109,
+     "sha256": "e96b031486aecbeabc858017f83ca374ecb0d5314b628ce2705b070166705107"
+    },
+    {
+     "title": "Audi（BR 巴西 `www.audi.com.br/pt`：**curl 403 Akamai，真浏览器可开；总览页 serialized-onegraph-store 给 20 个 carline + minPrice，配置器逐版本给 BRL 价**）✅",
+     "srcLine": 125,
+     "sha256": "f9f66f8370e011526a5005a338537de18fb3daf80745a709672249c1c1e8c357"
+    },
+    {
+     "title": "Porsche（BR 巴西 `www.porsche.com/brazil/pt`：**主站/配置器 curl 403，官方对比站 `compare.porsche.com/pt-BR` curl 200 可拿全量 40 款**）✅",
+     "srcLine": 139,
+     "sha256": "e04be979291bc7e650493fc0df56ea0e63edaedf36e70933ac73b57b8bca2c40"
+    },
+    {
+     "title": "Avatr（BR 巴西 `avatr.caoachangan.com.br`：CAOA AVATR 官方进口商站；curl 403，真浏览器读 AVATR 11 两个座位版起价）✅",
+     "srcLine": 155,
+     "sha256": "599869109412dc8fcc27a1ba6ac7f5469cca58f56bbf39a625f3427c1a73e84b"
+    },
+    {
+     "title": "Aston Martin（BR 巴西 `configurator.astonmartin.com/BR`：以巴西配置器车型清单为准；公开会话不渲染价格，声明由经销商定价）⚠️ 无价格出表",
+     "srcLine": 170,
+     "sha256": "147fd9cfec23e49d29a12d750fdef3f08e00c2c1f5142a0dcaaac127e7825d2c"
+    },
+    {
+     "title": "Mercedes-Benz（BR 巴西 `www2.mercedes-benz.com.br`：**curl 403，但 vmos + owcc API 直通；36 个 motorization 逐条有价与 ano/modelo**）✅",
+     "srcLine": 184,
+     "sha256": "5685ad2c24ac3f1b37f4ea11c0231958de20376bc3b44476619a1a6bd9cd81e6"
+    },
+    {
+     "title": "Honda（BR 巴西 `www.honda.com.br`：**curl 403；选 SP 后调用官方产品 API 可拿 21 个版本全部价格**）✅",
+     "srcLine": 198,
+     "sha256": "5e5f8e4cda2977f90aed0a7eda1fb133c13dd6c02063c409afafa1369ccc3103"
+    },
+    {
+     "title": "Peugeot（BR 巴西 `www.peugeot.com.br`：**主站 curl 403；真浏览器可开；`monte.html` 的「1. VERSÃO」版本卡逐版本给 MSRP，版本名尾部即 ano/modelo**）✅",
+     "srcLine": 214,
+     "sha256": "741e3cda124f91154d61a2f3f51b72b9aec2b9f341c142b38f39a032f975a330"
+    },
+    {
+     "title": "Volkswagen（BR 巴西 `www.vw.com.br`：**配置器 app 逐版本给 `Preço Total`，完整车型名尾部 `Modelo 2027`；compare 页最多并排 3 个配置**）✅",
+     "srcLine": 228,
+     "sha256": "bfed56b05932477e8965e19ae618209daa83e5a37b87cbd96cda04ffeeb3a5e4"
+    },
+    {
+     "title": "Toyota（BR 巴西 `www.toyota.com.br`：**配置器 Next.js `__NEXT_DATA__` 逐版本给价 + modelYear；PDF 仅交叉核对**）✅",
+     "srcLine": 245,
+     "sha256": "2c738537fc3f589fe357f9ec7ccdb0d6635091054f557b39c8a61c0fd5b57005"
+    },
+    {
+     "title": "Ford（BR 巴西 `www.ford.com.br`：**配置器 `.bp-nameplate-data` 逐版本给价 + 标签年款；商用车仅询价**）⚠️ 商用车缺价",
+     "srcLine": 261,
+     "sha256": "1847a2d0e3415ef0df5bdb261b3162a258681fb58f2ca7f343beab357e759a59"
+    },
+    {
+     "title": "GAC / Aion / Hyptec（BR 巴西 `www.gacgroup.com/pt-br`：Nuxt 配置页 `vehicleModels[].salePrice` 逐版本价）✅",
+     "srcLine": 277,
+     "sha256": "602a96983dd7cbe62d0cb97ec0f81975dc10a6b5cc55192b5fd4cfa0cb6d9bef"
+    },
+    {
+     "title": "BYD（BR 巴西 `www.byd.com/br`：**乘用车在 byd.com/br（bydbrasil.com.br 是商用车/集团站）；`/br/order-<model>` 版本卡给 `Preço de Venda`，年款分散在 Ofertas / Condições Comerciais**）✅",
+     "srcLine": 292,
+     "sha256": "2623e01eaa1d32d6d80028d920c60671ef7e2a0c6045b91a4e12780b30dcb409"
+    },
+    {
+     "title": "Fiat（BR 巴西 `www.fiat.com.br`：**curl 200；各车型子域 `monte.html` 版本卡给 MVS code + 完整版本名，价格卡显示不可用，改取同后端 price-service**）✅",
+     "srcLine": 306,
+     "sha256": "f8f68e1bf3a160e53b963e6b458ab7529b553c5f8cebe3fba12709c04b1f1e77"
+    },
+    {
+     "title": "ZEEKR（BR 巴西 `www.zeekr.com.br` → `www.zeekrlife.com/pt-br`：**主站证书过期，curl 需 `-k`；价格只在 `conf.zeekr.com.br` 配置器，按 `?linkCode=` 切车型**）✅",
+     "srcLine": 321,
+     "sha256": "f366635d2881fd816c6f8a2f10000989abd36d2b3a171054cc02c909b743017e"
+    },
+    {
+     "title": "Geely（BR 巴西 `www.geelybrasil.com.br`：**3 车型 / 7 版本；EX2/EX5 价格在 CloudFront 静态配置器，EX5 EM-i 在 pr-17 独立配置器且需区分 De/Por**）✅",
+     "srcLine": 335,
+     "sha256": "54b6b1fa3f30031775e369f75beb73fd5554d8a008b7da03a30da84152e0bd54"
+    },
+    {
+     "title": "Land Rover（BR 巴西 `www.landrover.com.br` / `www.rangerover.com/pt-br`：**各车型 personalise 配置器逐版本「A partir de」，RESUMO 直接给车型年**）✅",
+     "srcLine": 350,
+     "sha256": "1cfefd8b2f3eadd4ebd00bd9a8060b490ed1068e3cdbd0881508ff8ee7304e91"
+    },
+    {
+     "title": "JAC Motors（BR 巴西 `www.jacmotors.com.br`：**Elementor 站点，价格客户端注入；CARROS 3 款 + Hunter 皮卡有公开价，VANS/卡车无公开 MSRP**）✅",
+     "srcLine": 365,
+     "sha256": "1a4b10a7e2947838c892d736adf9768deb7245416278a5261fe41e4fee5ae32e"
+    },
+    {
+     "title": "Jaguar（BR 巴西：**`jaguar.com.br` 是 Jaguar Equipamentos 工业设备，不是汽车；JLR 巴西官方站 `jaguarbrasil.com.br` → `jaguar.com/pt-br`，当前仅 Type 01 预生产车、无价**）⚠️ 无价格出表",
+     "srcLine": 384,
+     "sha256": "cf743ed0996c3c6d74949f0e4c7713b1fb53f66b2585ceb4d056e8c57892897a"
+    },
+    {
+     "title": "Ferrari（BR 巴西 `www.ferrari.com/en-BR`：**官网全系不标价；车型页/配置器 0 个价格字段，CTA 只有 ENQUIRE / REQUEST INFORMATION**）⚠️ 无价格出表",
+     "srcLine": 396,
+     "sha256": "772abab50eff8ea0653e765f68e7275e4ca73f175d1423359f9a7a0f40363691"
     }
    ]
   },

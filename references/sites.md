@@ -239,6 +239,44 @@
 
 > 详段：sites/ar.md（1 段）
 
+### 巴西 BR
+
+| 品牌 | 结论 | 数据源 / 一句话方法 |
+|---|---|---|
+| Agrale | ⚠️ 无价格出表 | `www.agrale.com.br` curl 200；Caminhões 8 / Tratores 13 / Chassis 7 / Utilitários 9 = **37 个产品型号**；全站无 `R$` / `preço` / `valor`，只有 `Rede Agrale` / `Fale Conosco` → MSRP 全 `官网无价格`；无 MY → 年款全 `官网无年款` |
+| Effa Motors | ⚠️ 无价格出表 | `www.effamotors.com.br` Wix；4 款（Picape V21 / V21 Baú / V22 / Furgão V25）；无 `R$` / `preço`，只有 WhatsApp 销售入口；Ficha Técnica 均 `Gasolina (E22)` → MSRP 全 `官网无价格` |
+| Ram | ✅ | `www.ram.com.br` curl 403；`mvs-service` + `price-service`（`*.k8s.fcalatam.com.br`）直出全量：MVS 拿 `code/versionName/year/fuel`，`/price?mvsCode=&country=BR&year=` 顶层 `price` = 目录价；⚠ 预约接口 `/price/reservation` 是促销价，州/市缺省会显示不可用 |
+| Troller | ✅ | `www.troller.com.br` 仅留档；官方 `A Ford encerrará a produção de veículos Troller ao final de setembro ... 2021` → 停产，全站 0 价格、无年款；2 条 `官网无价格` + 停销是 |
+| Jeep | ✅ | `www.jeep.com.br` curl 直通；6 车系（Renegade 611/Compass 675/Commander 671/Avenger 657/Wrangler 685/Gladiator 559）；`mvs-service/mvs?brand=JEEP&model=&year=&market=pt-BR` 拿版本，`price-service/price?mvsCode=&country=BR&year=` 取顶层 `price`；⚠ `market=` 会 400，金融数字不采 |
+| MINI | ✅ | **官方价格表 PDF 为主源**：Legal 页挂 `mini_tabela_de_precos_outubro_2026.pdf`（`Preços Públicos válidos 01/10–31/10/2026`），表列 `Modelo / Versão / Ano/Modelo / Preço`，18 版逐条取 **Ano/Modelo 单值**（2026/2027）；mini.com.br curl 000 但 PDF 可浏览器同源 fetch；mini4u 计算器与促销条款只作交叉核对，冲突以价目表为准 |
+
+| BMW | ✅ | `www.bmw.com.br/pt` curl TLS reset，真浏览器可开；`/pt/all-models.html` 32 张 `.cmp-allmodelscard`，23 张有价卡展开为 **30 个配置 + 2 个 Novo 无价 = 32 条 / 20 车系**；⚠ 年款取卡内隐藏句 `Preço público sugerido ... ano/modelo YYYY/YYYY, de R$ ...`（一句同时给配置+年款+价，X1/320i/M4/M3/M2 一卡多配置），可见 `A partir de` 只是最低配；金融清库段的 2025/2025、2025/2026 不是价格年款；**售价再按配置器校准**（shadow DOM 的 `CON-MODAL-LINE-SELECTION`；M3 Competition 897.950 / Track 1.003.950、M2 Track 740.950 取配置器） |
+
+| Audi | ✅ | `www.audi.com.br/pt` curl 403 Akamai、真浏览器可开；`/pt/models/` 的 serialized-onegraph-store 给 **20 carline + minPrice**，配置器 `Etapa 1` 版本卡给逐版本 BRL 价（26 版本）；年款取 carline id / `pr` 参数（19×2026 + A6 Avant e-tron 2027） |
+
+| Porsche | ✅ | `www.porsche.com` / `configurator.porsche.com` curl 403，但官方对比站 `compare.porsche.com/pt-BR` curl 200 SSR 全量：车系计数 **911 12 / Taycan 5 / Panamera 4 / Macan 4 / Cayenne 15 = 40 卡**，卡内 `De R$`（⚠ R$ 后是 U+00A0）；配置器抽验 25 条一致、口径 `Preços públicos sugeridos` 不含国内运费；GT3×3 + Cayenne Electric×6 无价（CTA `Solicitar veículo`）→ `官网无价格` |
+| Avatr | ✅ | `avatr.caoachangan.com.br`（CAOA AVATR 官方进口商）curl 403、真浏览器可开；仅 AVATR 11，官网逐字 `4 lugares: A partir de R$ 619.900`、`5 lugares: A partir de R$ 599.990`；无 ano-modelo/MY → 官网无年款 |
+| Aston Martin | ⚠️ 无价格出表 | 以巴西配置器 `configurator.astonmartin.com/BR/model-select` 为准：`/models/products/BR` = **16 衍生版 / 6 车系**（Valen / Valhalla / DBX / Vantage / DB12 / Vanquish）；公开会话不渲染价格（dealer pricingData 缺省），声明价格由经销商确定 → 全 `官网无价格`；无 MY → 官网无年款 |
+| Mercedes-Benz | ✅ | 站点 curl 403，但 `api.oneweb.mercedes-benz.com` 直通（Referer = www2）；`vmos BR/pt` 给 17 车系，`owcc pt_BR/CCci/291767b9/entry?proposedStep=MOTORIZATION&typeClass=` 给 36 个 motorization 的 `name`/`price`/`fuelType`；年款取 tile name 末尾 `26/26`、`26/27`；`modelYear 806/807` 是销售代码不当年款 |
+| Honda | ✅ | `www.honda.com.br` curl 403；页面选 **SP (São Paulo)** 后调 `GET /automoveis/api/produtos/completo?modelo=<machine_name>&uf=SP&timestamp=YYYY_M_D_H` → `version_features[].colors[].pps.SP.field_pps_preco`，每版取颜色最低价；10 车系 21 版本全部有价（117 700–430 500 BRL）；**年款取每车型页底部 Texto Legal 的 `ano/modelo`，按第二年份映射 MY（2025/2026、2026/2026→MY2026；2026/2027→MY2027）**，不按发布/生产年份推算；machine_name 见详段 |
+| Peugeot | ✅ | `www.peugeot.com.br` curl 403、真浏览器可开；5 车系（208/2008/Partner Rapid/Expert/Boxer）逐车 `gama/<model>/monte.html` 的「1. VERSÃO」版本卡给全量版本价；版本名尾部即 ano/modelo（26/27、26/26、25/26）；**取版本卡/De 价，不取 POR 促销**（208 Style 89.990、2008 GT 162.990） |
+| Volkswagen | ✅ | `www.vw.com.br` curl 200 但价格全在配置器 JS；**全集必须以 `<carline>.app` 的「N versões」逐车清点**（`model-structure.mofa.json` 会滞后：Tera 实际 4 版，JSON 只有 3 版，漏 `Tera 170 TSI` 31601 / R$ 124.290）；`configurador.html/__app/<path>.app?...` 选完动力显示 `Preço Total`，完整车型名尾部 `Modelo 2027`（Amarok 2026）；**12 carline / 35 版本**；compare 页最多并排 3 个配置；Tukan（未上市）/Golf GTI（404）不纳入 |
+| Toyota | ✅ | `www.toyota.com.br` curl 200；**配置器** `/modelos/<slug>/monte` 的 `__NEXT_DATA__ → pageBlocks[1].props.models[].versions[]` 逐版本给价（`status:true`，取 `modelYear.colorWithPrice[].price` 最低）+ `modelYear.year`（2024/2026/2027）；17 车系 38 版本；PDF 仅交叉核对，bZ4X 颜色行合并、Hilux MT 不在售、GR Corolla 2024 取配置器 416 990/461 990、Corolla Cross GR-Sport 为 Gasoline 非 HEV |
+| Ford | ⚠️ 商用车缺价 | `www.ford.com.br` curl 403；**build&price 配置器** `?nameplate=<id>` 的 `.bp-nameplate-data[data-json]` 逐版本给 `label/price/PowerTrain`；9 nameplate 去重后 23 个乘用车版本 + 5 个商用车 = 28 条；年款取 label 末尾（Ranger 2027/2026、Raptor/Bronco/Territory 2026、Mustang GT 2025）；F-150/Maverick/Dark Horse 标签无年份且页面 2025 是版权年 → 官网无年款；Transit/E-Transit `Consulte sua concessionária Ford` → 官网无价格 |
+| GAC | ✅ | `www.gacgroup.com/pt-br`（`gac.com.br` TLS 不可用）；GS3 / GS4 Hybrid / GS9；版本价在 `/pt-br/configuration/<slug>/<year>` 的 Nuxt `vehicleModels[].salePrice`（`vehStyleCode` 即年款）；GS9 ULTRA 无价 |
+| Aion | ✅ | 同站 AION UT / V / ES / Y；`/pt-br/configuration/aion-*/2024` 的 `salePrice` 逐版本；⚠ `aionbrasil.com.br` 是 AI 服务公司，不是汽车品牌，官方车系在 gacgroup.com |
+| Hyptec | ✅ | 同站 `/pt-br/configuration/hyptec-ht/2024`；HT ELITE 314.990 / ULTRA 369.990；BEV |
+| BYD | ✅ | 乘用车在 `www.byd.com/br`（bydbrasil.com.br 是商用车）；`/br/order-<model>` 版本卡给 `Preço de Venda`（与 `/ofertas` 的 `De` 一致，不取 `Por`）；**16 车型 21 版本**；年款分散：Ofertas 2027、Condições Comerciais 逐字 `ano/modelo`、Yuan Plus 标题 2026；Dolphin SE/Dolphin Plus/Han/Sealion 7/Tan 无官方年款 → 官网无年款 |
+| Fiat | ✅ | `www.fiat.com.br` curl 200；各车型子域 `monte.html` 版本卡 `input[name=version]` = MVS code、`img[alt]` = 完整版本名，卡上价格显示不可用；价格取 `price-service.k8s.fcalatam.com.br/price?mvsCode=&country=BR&year=` 顶层 `price`；**11 车型 41 版本**；年款取版本名尾部，Titano/Fiorino/Ducato 用 MVS `year`（2026/2027/2025）；Ducato Heavy 529GGF0 未在 monte 卡中列出，不纳入 |
+| ZEEKR | ✅ | `zeekr.com.br` 证书过期 → 内容在 `zeekrlife.com/pt-br`；价格只在 `conf.zeekr.com.br` 3D 配置器，`?linkCode=` 切车型（001 默认 / 7X 1197 / X 3）；逐字读 `Ano/Modelo` + `Versão` + `xxx.000 BRL`；**3 车型 6 版本**，R$ 298.000–542.000，全 BEV |
+| Geely | ✅ | `www.geelybrasil.com.br` curl 200；**各车型配置器版本不同**：EX2 用 `d3ksl4ozrd1trt.../v13/?model=ex2`、EX5 用官方 monte 页内嵌 `d3ibdg82ywvs0g.../pr-20/index.html`（v13 的 EX5 旧价 205.800/225.800 已废，现为 207.800/227.800）、EX5 EM-i 用 `pr-17`；**3 车型 7 版本**；EX5 EM-i 有 `De/Por`，取 De 199.990/219.990/244.990；年款取 offer 法律条款 `ano/modelo 26/26`；BEV 4 · PHEV 3 |
+| Land Rover | ✅ | `www.landrover.com.br` curl 200；Range Rover 三款走 `rangerover.com/lr/pt_br/<l460_/l461_/l560>/ipr/personalise/`，Defender/Discovery 走 `landrover.com.br/lr/pt_br/<l663/l462/l550>/ipr/personalise/`；配置器 `Modelo` 卡给 `A partir de`，`RESUMO` 直接给车型年；**8 车型 13 版本**；PHEV 5 · MHEV 5 · Diesel 2 · Gasoline 1；Range Rover GT 未上市、Velar 2025 库存版不纳入 |
+| JAC Motors | ✅ | `www.jacmotors.com.br` curl 200；Elementor 价格客户端注入（静态占位 `R$000.000`），页面重、navigate 常超时但 `evaluate` 可读；**CARROS 3 款 + Hunter 皮卡 = 4 车系 5 版本**；E-JS1 25/26 `De 132.900`（Por 119.900 不采）、EXT 无价、E-JS4 254.900、E-J7 259.900、Hunter HD 25/26 259.900；VANS/卡车商用线无公开价，不混入 |
+| Jaguar | ⚠️ 无价格出表 | `www.jaguar.com.br` 是 **Jaguar Equipamentos 工业设备**，不是汽车；JLR 巴西官方 `jaguarbrasil.com.br` → `jaguar.com/pt-br`，当前仅 `Type 01` 预生产车、全站无 R$/price → `官网无价格` + `官网无年款`；BEV |
+| Ferrari | ⚠️ 无价格出表 | `www.ferrari.com/en-BR` curl 200，车型页 curl 403 但真浏览器可开；Range 页 **19 款** + 配置器独有 **Roma Spider = 20 车型**；Range/车型页/`carconfigurator.ferrari.com/en_EN` 全部 0 个价格字段，CTA `ENQUIRE`/`REQUEST INFORMATION` → 20 条全 `官网无价格` + `官网无年款`；Gasoline 10 · PHEV 8 · HEV 1 · BEV 1 |
+
+> 详段：sites/br.md（26 段）
+
 ### 新西兰 NZ / 菲律宾 PH / 全球
 
 | 品牌 | 结论 | 数据源 / 一句话方法 |

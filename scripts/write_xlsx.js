@@ -172,7 +172,13 @@ async function main() {
     c.alignment = { horizontal: 'center', vertical: 'middle' };
   });
 
+  let lineNo = 2;
   for (const r of rows) {
+    const yv = String(r.year || '官网无年款').trim();
+    if (!/^(\d{4}|MY\d{2,4}|官网无年款)$/.test(yv)) {
+      console.warn(`[WARN] 第${lineNo}行 年款不合规: "${yv}" —— 只能单个值；ano/modelo 双年份取模型年（26/27→2027），原文放副表`);
+    }
+    lineNo++;
     ws.addRow([
       r.brand ?? '',
       r.model ?? '',

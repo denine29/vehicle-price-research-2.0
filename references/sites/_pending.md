@@ -16,6 +16,8 @@
 
 | 2026-11-16 | DE | Chevrolet / Mitsubishi / Togg | 交付目录有成品，`de.md` 无对应知识段 | 回写价格源/年款/坑 | `Desktop/德国/datas` |
 | 2026-11-16 | US | Lexus | 交付目录有成品，`us.md` 无对应知识段 | 回写价格源/年款/坑 | `Desktop/ALL DATA/往期/美国/data` |
+| 2026-11-18 | BR | Ford BR 未完成（商用车 5 版 + 全部年款） | 交付目录最终只保留 23 条的 `Ford_BR_官网价_20261117.xlsx`，且 **23 条全是 `官网无年款`**；同日 28 行文件是**半成品**（26/28 行只有品牌与燃油），已归档 `_work/archive_20261118_dupes` | 重跑 Ford BR：① 按 `br.md`「年款坑」从 model label 末尾取 2027/2026/2025；② 补齐 5 个商用车版本（Transit/E-Transit 等，价格 `官网无价格`）；③ 出 28 条后回写本行删除 | `Desktop/ALL DATA/新/data/_work/archive_20261118_dupes/Ford_BR_官网价_20261118.xlsx`；`https://www.ford.com.br/compre-o-seu/monte-o-seu-novo/` |
+| 2026-11-18 | BR | Hycan | 用户给 `https://www.hycan.com.br`，但 `hycan.com.br` / `www.hycan.com.br` **DNS 不解析**（curl `Could not resolve host`；浏览器 `ERR_CONNECTION_CLOSED`，http 也空白）；WebSearch 未找到巴西官方站，只有全球站 `hycan.com.cn` | 需用户确认正确巴西官网（或是否尚未上线）；无官网则不出表，不能拿全球站/第三方价冒充 BR MSRP | `https://www.hycan.com.br`（实测 2026-11-18，DNS NXDOMAIN）；`https://www.hycan.com.cn/en/news.html`（全球站） |
 
 ## 证据欠账（旧段，缺 URL/日期；动到哪段就顺手补哪段）
 

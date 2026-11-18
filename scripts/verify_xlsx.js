@@ -99,8 +99,18 @@ const autoRange = ws => {
     const d = cellText(ws.getCell(r, 7)).trim();
     if (!/^\d{8}$/.test(d)) add(`第${r}行 数据日期不是 YYYYMMDD 文本: ${d}`);
     else if (wantDate && d !== wantDate) add(`第${r}行 数据日期 ${d} ≠ ${wantDate}`);
-    mainRows.push({ r, brand: cellText(ws.getCell(r, 1)).trim(), model: cellText(ws.getCell(r, 2)).trim(), version: cellText(ws.getCell(r, 3)).trim(), year: cellText(ws.getCell(r, 4)).trim() });
+    const year = cellText(ws.getCell(r, 4)).trim();
+    if (!/^(\d{4}|MY\d{2,4}|官网无年款)$/.test(year)) add(`第${r}行 年款取值非法: "${year}"（只允许 YYYY / MYxx / 官网无年款，双年份须取模型年）`);
+    mainRows.push({ r, brand: cellText(ws.getCell(r, 1)).trim(), model: cellText(ws.getCell(r, 2)).trim(), version: cellText(ws.getCell(r, 3)).trim(), year, date: d });
   }
+
+  // 数据日期：全表一致，且与文件名日期一致
+  const dates = new Set(mainRows.map(m => m.date).filter(Boolean));
+  if (dates.size > 1) add('数据日期不统一，出现: ' + [...dates].join(' / '));
+  const fnDate = /_(\d{8})(?:_v\d+)?\.xlsx$/i.exec(path.basename(xlsxPath));
+  if (fnDate && dates.size === 1 && !dates.has(fnDate[1])) add(`数据日期 ${[...dates][0]} ≠ 文件名日期 ${fnDate[1]}`);
+  const years = new Set(mainRows.map(m => m.year).filter(y => y && y !== '官网无年款').map(y => (/^MY/.test(y) ? 'MY' : 'plain')));
+  if (years.size > 1) warns.push('年款风格混用（同表既有 2026 又有 MY2026），建议统一');
 
   // 重复型号行：品牌+车型+型号名 必须唯一（同名不同价应加后缀）
   const keyRows = new Map();
@@ -159,6 +169,8 @@ const autoRange = ws => {
       else sum += n;
       if (!cellText(ws2.getCell(r, 6)).trim()) add(`副表第${r}行 缺「官网原文（逐字）」`);
       if (!cellText(ws2.getCell(r, 7)).trim()) add(`副表第${r}行 缺「来源位置」`);
+      const y2 = cellText(ws2.getCell(r, 3)).trim();
+      if (!/^(\d{4}|MY\d{2,4}|官网无年款)$/.test(y2)) add(`副表第${r}行 年款取值非法: "${y2}"（不得含 /，双年份放「官网原文」）`);
     }
     const groupYears = new Map();
     for (let r = 2; r <= l2; r++) {
