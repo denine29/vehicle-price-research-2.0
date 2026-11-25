@@ -27,10 +27,10 @@ const hashed = b => {
   const a = b.slice();
   while (a.length && a[a.length - 1].trim() === '') a.pop();
   if (a.length && a[a.length - 1].trim() === '---') { a.pop(); while (a.length && a[a.length - 1].trim() === '') a.pop(); }
-  return crypto.createHash('sha256').update(a.join('\n')).digest('hex');
+  return crypto.createHash('sha256').update(a.map(x => x.replace(/\r$/, '')).join('\n')).digest('hex');
 };
 
-const L = fs.readFileSync(SITES, 'utf8').split('\n');
+const L = fs.readFileSync(SITES, 'utf8').split(/\r?\n/);
 const h2 = [], h3 = [];
 L.forEach((l, i) => { if (/^## /.test(l)) h2.push(i + 1); if (/^### /.test(l)) h3.push(i + 1); });
 const start = h2.find(n => /站点速查/.test(L[n - 1]));
@@ -68,7 +68,7 @@ for (const b of blocks) {
 
   const fp = path.join(DIR, pointer.file + '.md');
   if (!fs.existsSync(fp)) { errors.push(`[${key}] 详段文件不存在: sites/${pointer.file}.md`); continue; }
-  const FL = fs.readFileSync(fp, 'utf8').split('\n');
+  const FL = fs.readFileSync(fp, 'utf8').split(/\r?\n/);
   const hs = [];
   FL.forEach((l, i) => { if (/^### /.test(l)) hs.push(i + 1); });
   if (hs.length !== pointer.count) errors.push(`[${key}] 段数不符: 索引 ${pointer.count} ≠ 文件 ${hs.length}`);
@@ -104,7 +104,7 @@ for (const b of blocks) {
 
 const noDetail = [];
 for (const b of blocks) {
-  const key = (/([A-Z]{2})$/.exec(b.title) || [, 'global'])[1].toLowerCase();
+  const key = (/([A-Z]{2})$/.exec(b.title.replace(/\s+/g, ' ').trim()) || [, 'global'])[1].toLowerCase();
   let n = 0;
   for (let i = b.s; i <= b.e; i++) if (isRow(L[i - 1])) n++;
   if (n) noDetail.push(key + ':' + n);

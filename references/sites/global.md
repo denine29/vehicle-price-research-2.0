@@ -1,8 +1,8 @@
 # 新西兰 NZ / 菲律宾 PH / 全球 — 站点坑位详段
 
-> 市场码 GLOBAL · 5 段 · 品牌：Mercedes-Benz / Aston Martin / IM Motors 智己 / Rolls-Royce 劳斯莱斯
+> 市场码 GLOBAL · 6 段 · 品牌：Mercedes-Benz / Aston Martin / IM Motors 智己 / Rolls-Royce 劳斯莱斯 / Lamborghini
 > 返回索引 [../sites.md](../sites.md)（含通用方法 / 止损判定 / 集团级套路）
-> 最后实测：2026-11-16 · 文中 snapshotVersion / token / 车型 id 均为当时实测值，必须现取
+> 最后实测：2026-11-20 · 文中 snapshotVersion / token / 车型 id 均为当时实测值，必须现取
 
 ---
 
@@ -82,3 +82,20 @@
 - **来源**：`https://www.rolls-roycemotorcars.com/en_GB/showroom.html`（车型全集）、`…/en_GB/showroom/{phantom,ghost,cullinan,spectre}.html`（WLTP + CTA）、`…/en_US/bespoke/configure-your-rolls-royce.html`（配置器免责声明）、`https://www.rolls-roycemotorcars.com.cn/zh_CN/showroom/*.html`（0 价格复核）
 - **原文**：`Enquire` · `WLTP combined: CO2 emissions: 361-351 g/km; Fuel consumption: 17.8-18.2 mpg / 15.9 -15.5 l/100km.` · `Electric range: 390–362 miles, 628–582 km. CO2 emissions: 0g/km.` · `Can you give me the prices of your models? The prices of our model range would depend on the specification.`
 - **交付结果**：`Rolls-Royce_GLOBAL_官网价_20261116.xlsx`，**9 条**，MSRP 全填 `官网无价格`；燃油 **Gasoline 7 · BEV 2**（仅 Spectre Series II 与 Black Badge Spectre Series II 为 BEV）；年款全「官网无年款」。
+
+---
+
+### Lamborghini（全球 `www.lamborghini.com/en-en`：**官网不公布 MSRP；Range 3 车系 6 车型全部入表，MSRP 全 `官网无价格`；ENQUIRE 表单逐字 2027**）⚠️ 无价格出表
+
+- **可达性**：`curl --ssl-no-revoke` 直通 200（Next.js）；`configurator.lamborghini.com` 200，但按出口 IP 自动带 `lang/country`（本机默认跳 `country=jp&lang=jpn`，中文 cookie 横幅）；要拿英文证据显式加 `?lang=eng&country=us`（2026-11-20）。
+- **★ 在售全集（Range 3 车系 / 6 车型）**：**Temerario**（Temerario · Temerario Spyder）· **Revuelto**（Revuelto · Revuelto SV）· **Urus**（Urus SE · Urus SE Performante）。配置器 intro 的 3 页逐项对应；车型页 `/en-en/models` 的 Range 轮播亦为这 3 族。
+- **⚠ 不入表**：`Urus SE Tettonero Capsule` 是配置器里的特别版 capsule（FR 记录同样排除 capsule/one-off）；`Revuelto Miura 60° Homage`、`Temerario Tettonero Capsule`、`Temerario Spyder` 以外的概念/限量（Asterion / Estoque / Terzo Millennio / Sian / Countach LPI 800-4 / Fenomeno）均不纳入。
+- **★ 价格结论：官网不公布**（三类证据同时成立）：① 6 个车型页 JSON-LD（`Vehicle`/`Car`）无 `offers` / `price` 字段，全文 money 正则只命中 cookie/免责声明；② 配置器从 intro → `Start configuration` → 配置项 → `YOUR CAR` 摘要，全程 0 个 €/USD/amount，只有配置代码与 `ENQUIRE`；③ 无任何官方价目表/PDF。→ **6 行 MSRP 全填 `官网无价格`**，不拿意大利/美国新闻稿或 dealer 报价冒充。
+- **年款**：逐车型在配置器点 `ENQUIRE`，表单 `SELECTED CAR` 逐字给出 `2027 Lamborghini <车型> | <颜色> | <配置码>` → **全部 2027**（6 个车型逐一取证，见交付表副表）。
+- **燃油**：6 款均为 `High Performance Electrified Vehicle (HPEV)`（V8/V12 + 三电机或电机）→ **PHEV**。
+- **⚠ 未开售标注**：Temerario / Temerario Spyder / Revuelto SV / Urus SE Performante 的配置器页逐字 `The vehicle is not yet offered for sale and is therefore not subject to Directive 1999/94/EC.`；按「官网列了车型但无价 → 照常出表」规则仍入表，`是否停销` 填 `否`，交付说明标注「官网标未开售」。
+- **交付结果**：`Lamborghini_GLOBAL_官网价_20261120.xlsx`，**6 条 / 3 车系**，MSRP 全 `官网无价格`；年款 2027 ×6；燃油 PHEV 6。
+- **实测**：2026-11-20
+- **来源**：`https://www.lamborghini.com/en-en/models`；`https://www.lamborghini.com/en-en/models/{temerario-models/temerario,temerario-models/temerario-spyder,revuelto-models/revuelto,revuelto-models/revuelto-sv,urus/urus-se,urus/urus-se-performante}`；`https://configurator.lamborghini.com/configurator/model/{32007-20111/MBV-20007-2027,32007-20111/MBV-23127-2027,32006-20111/MBV-21707-2027,32006-20111/MBV-21717-2027,32005-20111/MBV-24717-2027,32005-20111/MBV-24727-2027}?lang=eng&country=us`（ENQUIRE）
+- **原文**：`2027 Lamborghini Temerario | Giallo | ALQORF`；`2027 Lamborghini Temerario Spyder | Arancio Egon | ALZLI7`；`2027 Lamborghini Revuelto | Arancio Apodis | ALXFIK`；`2027 Lamborghini Revuelto SV | Azzurro Thetys | ALSFNX`；`2027 Lamborghini URUS SE | Arancio Egon | ALX5VJ`；`2027 Lamborghini URUS SE Performante | Giallo Crius | ALL2WC`；`The vehicle is not yet offered for sale and is therefore not subject to Directive 1999/94/EC.`
+- **与 FR 差异**：FR（2026-11-16）配置器只有 5 个车型（无 Temerario Spyder）；本次 en-en 已新增 **Temerario Spyder**（Range hero 首屏、`Under approval, not available for sale`）并纳入第 6 行；价格策略不变（全无价），年款均 2027，燃油均 PHEV。

@@ -2,14 +2,14 @@
 /*
 交付前回读校验：直接读成品 XLSX，核对结构 + 与源数据逐行比对。
 用法:
-  node verify_xlsx.js <xlsx> [rows.json] [--basis year_basis.json] [--money euro] [--date YYYYMMDD]
+  node verify_xlsx.js <xlsx> [rows.json] [--basis year_basis.json] [--money euro|comma|comma2|lakh|space] [--date YYYYMMDD]
   不给 rows.json 时只做结构校验（适合检查别人/COM 生成的表）
 退出码: 0 全过 / 1 有错误
 */
 const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { fmtPrice, fuelClass, parsePrice } = require('./write_xlsx');
+const { fmtPrice, fuelClass, parsePrice, YEAR_OK, MONEY_MODES } = require('./write_xlsx');
 
 const HEADER = ['品牌', '官网车型名称', '官网型号名称', '年款', '官网MSRP', '是否停销', '数据日期', '燃油分类'];
 const H2 = ['品牌', '官网车型名称', '年款', '覆盖型号数', '年款依据（判定过程）', '官网原文（逐字）', '来源位置'];
@@ -29,7 +29,8 @@ const basisPath = opts.basis || null;
 const money = opts.money || null;
 const wantDate = opts.date || null;
 const skipSheet2 = !!opts['skip-sheet2'];
-if (!xlsxPath) { console.error('用法: node verify_xlsx.js <xlsx> [rows.json] [--basis b.json] [--money euro] [--date YYYYMMDD]'); process.exit(1); }
+if (money && !MONEY_MODES.has(money)) { console.error('[FAIL] --money 不支持: ' + money + '（可选 euro|comma|comma2|lakh|space）'); process.exit(1); }
+if (!xlsxPath) { console.error('用法: node verify_xlsx.js <xlsx> [rows.json] [--basis b.json] [--money euro|comma|comma2|lakh|space] [--date YYYYMMDD]'); process.exit(1); }
 
 const errs = [], warns = [];
 const add = (m) => errs.push(m);
@@ -91,7 +92,8 @@ const autoRange = ws => {
     if (!price) add(`第${r}行 MSRP 为空`);
     else if (!MARKS.includes(price)) {
       if (/[€$£฿¥]/.test(price)) add(`第${r}行 MSRP 含货币符号: ${price}`);
-      else if (!/^[\d.,]+$/.test(price)) add(`第${r}行 MSRP 不是数字文本: ${price}`);
+      else if (!/^[\d., ]+$/.test(price)) add(`第${r}行 MSRP 不是数字文本: ${price}`);
+      else if (money === 'space' && !/^\d{1,3}(?: \d{3})*$/.test(price)) add(`第${r}行 MSRP 不是空格千分位: ${price}`);
     }
     for (let c = 1; c <= 3; c++) if (!cellText(ws.getCell(r, c)).trim()) add(`第${r}行 第${c}列「${HEADER[c - 1]}」为空`);
     const fuel = cellText(ws.getCell(r, 8)).trim();
@@ -100,7 +102,7 @@ const autoRange = ws => {
     if (!/^\d{8}$/.test(d)) add(`第${r}行 数据日期不是 YYYYMMDD 文本: ${d}`);
     else if (wantDate && d !== wantDate) add(`第${r}行 数据日期 ${d} ≠ ${wantDate}`);
     const year = cellText(ws.getCell(r, 4)).trim();
-    if (!/^(\d{4}|MY\d{2,4}|官网无年款)$/.test(year)) add(`第${r}行 年款取值非法: "${year}"（只允许 YYYY / MYxx / 官网无年款，双年份须取模型年）`);
+    if (!YEAR_OK.test(year)) add(`第${r}行 年款取值非法: "${year}"（只允许单一模型年，可带小数或 MY 前后缀；双年份须取模型年）`);
     mainRows.push({ r, brand: cellText(ws.getCell(r, 1)).trim(), model: cellText(ws.getCell(r, 2)).trim(), version: cellText(ws.getCell(r, 3)).trim(), year, date: d });
   }
 
@@ -112,10 +114,10 @@ const autoRange = ws => {
   const years = new Set(mainRows.map(m => m.year).filter(y => y && y !== '官网无年款').map(y => (/^MY/.test(y) ? 'MY' : 'plain')));
   if (years.size > 1) warns.push('年款风格混用（同表既有 2026 又有 MY2026），建议统一');
 
-  // 重复型号行：品牌+车型+型号名 必须唯一（同名不同价应加后缀）
+  // 重复型号行：品牌+车型+型号名+年款 必须唯一（同名跨年款可并存；同年款同名不同价应加后缀）
   const keyRows = new Map();
   for (const m of mainRows) {
-    const k = m.brand + '|' + m.model + '|' + m.version;
+    const k = m.brand + '|' + m.model + '|' + m.version + '|' + m.year;
     if (!keyRows.has(k)) keyRows.set(k, []);
     keyRows.get(k).push(m.r);
   }
@@ -170,7 +172,7 @@ const autoRange = ws => {
       if (!cellText(ws2.getCell(r, 6)).trim()) add(`副表第${r}行 缺「官网原文（逐字）」`);
       if (!cellText(ws2.getCell(r, 7)).trim()) add(`副表第${r}行 缺「来源位置」`);
       const y2 = cellText(ws2.getCell(r, 3)).trim();
-      if (!/^(\d{4}|MY\d{2,4}|官网无年款)$/.test(y2)) add(`副表第${r}行 年款取值非法: "${y2}"（不得含 /，双年份放「官网原文」）`);
+      if (!YEAR_OK.test(y2)) add(`副表第${r}行 年款取值非法: "${y2}"（不得含 /，双年份放「官网原文」）`);
     }
     const groupYears = new Map();
     for (let r = 2; r <= l2; r++) {

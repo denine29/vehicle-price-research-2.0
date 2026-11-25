@@ -10,7 +10,7 @@
 >
 > **时效性**：文中的 `snapshotVersion` / `dataVersion` / token / 车型 id 都是**当时实测值**，会过期（例：Škoda BE 已从 `b430ec84…` 变为 `37f3d879…`）。每次任务必须**现取**，不能照抄。
 >
-> **读取方式**：本索引约 260 行，整读也无妨；**详段**在 `sites/<market>.md`，只读对应市场那一份（16–824 行），不要把所有市场文件一起读。
+> **读取方式**：本文件是路由索引，按任务只读**目标市场块 + 通用方法 + 止损判定**，不要整读；**详段**在 `sites/<market>.md`，只读对应市场里命中的品牌段，也不要把所有市场文件一起读。
 
 ### 西班牙 ES
 
@@ -128,9 +128,15 @@
 | Hyundai | ⚠️ | curl 全通；只有车系级起价（models 页 JSON），配置器是纯壳 |
 | Fiat | ⚠️ | 主站 JS 全挂（61 KB 空壳）；只有 `store.fiat.co.uk/compare` 的 10 个车系 |
 | Mercedes-Benz | ✅ | VMOS API（英国路径 `en_GB/CCci`，`typeClass` 要剥 `-fl`/`-fl2`），36 series / **403 条**；接口 `modelYear` 是销售代码 → `官网无年款` |
-| Škoda | ✅ | 与 BE 同一套 `cc.skoda-auto.com/c3pobe/*`，市场码 `GBR`；**英国 `modelPrice.price` 是 OTR 价**（含 delivery + 首注册 + VED），与 BE 口径不同 |
+| Škoda | ✅ | `www.skoda.co.uk` range 页只给 trim 入门 `From*` 价；**完整版必须走配置器**：webcache `trimlines/engines-en-GB.json` + `POST /c3popr/v3/GetEnginePricesByTrim {"ModelId":"<defaultModelId>"}`；**14 车系 171 版本，MY2027**；BEV 27 · Gasoline 80 · Diesel 33 · MHEV 21 · PHEV 10；只解析 range 页会漏掉同 trim 的 1.0 MPI/1.0 TSI/DSG 等衍生版（73 vs 171） |
+| MG | ✅ | `www.mg.co.uk` 200；15 车系 35 版本；配置器 `/configurator/<slug>` 的 Compare trims 逐 trim £价（Cash Price Details）；BEV 21 · HEV 6 · PHEV 4 · Gasoline 4；无 MY → `官网无年款`；GBP 逗号千分位 |
+| Mitsubishi | ✅ | `www.mitsubishi-motors.co.uk` 200；当前 2 车系 4 版本：L200 Titan/Barbarian £36 295/£39 995（CVOTR Excl. VAT）、Outlander PHEV Nativa/Diamond £46 995/£49 995（OTR）；无 MY → `官网无年款` |
+| KGM | ✅ | `www.kgm-motors.co.uk/new-cars/` 200；模型级 From 价 9 款：Tivoli £24,045、Torres Hybrid £35,995、Torres EVX £35,495（inc £1,500 ECG）、Actyon Hybrid £38,995、Rexton £42,615、Rexton Commercial £35,995 exc. VAT、Musso Pick-Up £32,980 exc. VAT、Musso EV £39,995（inc £5,000 PiVG）、Musso Rhino £38,995 exc. VAT；无 MY → `官网无年款` |
+| Subaru | ✅ | `subaru.co.uk/overview/<model>` 200；Price Breakdown 逐 trim 取 **Total On The Road Price**；5 车系 14 版本：Crosstrek £35,995/£38,100、Forester £39,995/£41,545/£44,100、Outback £40,495/£42,655/£45,645、Solterra £52,505/£55,505、e-Outback £49,995/£51,995/£52,495/£54,995；无 MY → `官网无年款`；e-Boxer MHEV · Outback Gasoline · Solterra/e-Outback BEV |
+| Volvo | ✅ | `volvocars.com/uk/build/` 真浏览器（curl 常 403）；13 个 MY27 build 页按 **Level × Powertrain** 出 **65 条**（价格=Level 基础价+动力加价）：EX30 P5/P5 LR +4 200、EX90 Single/Twin +5 900、EX60 P6/P10 +3 000/P12 +8 000、EX40/EC40 P5 LR/P8 +4 000；XC90/XC60/V60 各 PHEV（T8）+ MHEV（B5），XC40 B3，V60 MHEV B4；EX30 31 385–45 885、EX90 73 160–99 760、EX60 56 860–70 360、EX40 43 860–53 860、EC40 45 860–53 860、ES90 67 560–77 260、XC90 PHEV 75 765–89 265、XC90 MHEV 56 120–70 770、XC60 PHEV 56 765–70 865、XC60 MHEV 42 860–57 420、XC40 37 710–46 760、V60 PHEV 52 765–57 365、V60 MHEV 45 210–49 810；年款 2027；BEV 34 · PHEV 13 · MHEV 18；放桌面 |
+| Maxus | ❌ | `www.maxus.co.uk` 是 GoDaddy 停放页 `/lander`（`LANDER_SYSTEM="PW"`、`ap:"parking"`），无车型/价格 → 不出表 |
 
-> 详段：sites/uk.md（5 段）
+> 详段：sites/uk.md（12 段）
 
 ### 德国 DE
 
@@ -277,6 +283,55 @@
 
 > 详段：sites/br.md（26 段）
 
+### 挪威 NO
+
+| 品牌 | 结论 | 数据源 / 一句话方法 |
+|---|---|---|
+| ZEEKR | ✅ | `www.zeekr.eu/nb-no` curl 200；车型页给起价，版本价在 `shop.zeekr.eu/nb-no/configuration/?linkCode=`（001=1 / 7X=1075 / 7GT=1611 / X=1628）；**4 车型 14 版本**，NOK 376 800–730 500；页面 `Kampanje - nå fra …` 是促销，取未划线 `Pris`；无 årsmodell → 官网无年款；全 BEV；NOK 用空格千分位 |
+| Jaguar | ⚠️ 无价格出表 | `www.jaguar.no` → `jaguar.com/no-no`，首页仅 `Copy nothing.` teaser；sitemap 只有 Type 01，无配置器/价格/年款；Type 01 纯电但 `官网无价格` + `官网无年款` |
+| Toyota | ✅ | `www.toyota.no/nybil` curl/robots 全 403，真浏览器可开；车型页 `<div id="tor-…-data">` 的 `gradeSelectorModel.model.gradeBodyTypes[].engines[].transmissions[].wheeldrives[].price.list` 逐版本取价（**不取**带默认漆的卡面价）；10 车系 43 组合；Proace Verso 走 build 页；官方价目 PDF 无 MY → 官网无年款 |
+| Fiat | ✅ | `www.fiat.no` curl 403，真浏览器可开；`/nyttige-lenker/prislister` → 官方 PDF，取 `Veil.pris inkl mva`（**不取** `Kampanje` 行）；5 乘客车 + E-Scudo 2 有价，E-Doblò 价目表 404=`未核实`、E-Ducato=`官网无价格`；无 MY → 官网无年款 |
+| Ford | ✅ | `www.ford.no` curl 超时，真浏览器可开；配置器 `servicescache.ford.com/api/vehicle-model/v1/load?config=<catalogId>` 的 `features.byMarketing[series].featurePrice.basePrice.grossOTR` = MSRP（**不取** `recommendedOTRPromotionalPrice`）；PV 以官方价目表 PDF（`pdftotext -raw`）逐版本取：**20 车系 / 50 行** = PV 6 车系 36 行（Puma 4 / Capri 8 / Explorer 8 / Mach-E 4 / E-Tourneo 8 / Tourneo 4）+ CV/皮卡 14 车系 14 行车系级（官方 `Eks. MVA`，不与 PV 含税价横比）；年款按官网原值照写：Puma 2027 / Capri·Explorer 2027.25 / Mach-E 2026 / Tourneo·E-Tourneo 2026.50；CV 官网无年款；Fiesta/Focus 停产、Ranger Super Duty 未上市均不入表；`rohneselmer.no` 是经销商，不作官网源 |
+| Land Rover | ✅ | `rules.config.landrover.com/rc/lr/no_no/{carline}_k27/.jsonp` 可 curl 直连（须 `-L --compressed`，先 302 到 build 文件）；`PRODUCT` 组取 `price.RETAIL`（Velar/Discovery Sport 回退 `GROSS`）；**7 车系 186 型号**，NOK 1 005 900–4 946 900；`modelyear` k27→MY2027 / k26→MY2026；同名补 SWB/LWB 与 90/110/130 车身 |
+| Voyah | ✅ | `www.voyah.no` curl 200；仅 COURAGE 在售（Dream/Free 标 `Utgått`）；`/voyah-courage/bygg-din-bil` 4 版本卡给 NOK：CORE RWD 299 990 / CORE AWD 349 990 / PREMIUM RWD 349 990 / DESIGN AWD 399 990；DESIGN `Spar 100.000` 只有展示价；无 årsmodell → 官网无年款；全 BEV |
+| Lexus | ✅ | `www.lexus.no` curl 403 Akamai；首页同源 `fetch('/new-cars/…')` 取 HTML；**只看 grade 卡会少算**：必须继续 Texus `getGrades` → 每个 grade 的 `getMotorizations`，取各 `Engine` 的 `Grades[].PriceInfo.ListPriceWithDiscount`；**RZ 5 / ES 3 / TZ 5 = 13 版本**（RZ 500e Executive 642 100、500e Luxury 740 000、ES 500e Executive 711 400 是卡片漏项）；TZ 取 `Prisoversikt` 静态表（含 frakt/levering Oslo）；RZ/ES 2026、TZ 无年款；全 BEV |
+| Dongfeng | ✅ | `www.dong-feng.no` curl 200；BOX / VIGO 两车型，`/box/konfigurator`、`/vigo/konfigurator` 版本卡直接给 kr；**4 版本**：BOX GO 189 990 / BOX Long Range 214 900 / VIGO Comfort 229 990 / VIGO Signature 259 990；加价项不采；无 årsmodell → 官网无年款；全 BEV |
+| Lotus | ✅ 部分无价 | `www.lotuscars.com/en-NO` curl 200；定价 `ruler/pricing/<MODEL>/NO/<MHP>` 取 `retailPrice`（NOK）；**5 车系 20 版本**（Emira 6 · Eletre X 2 · Eletre 6 · Emeya 5 · Evija 1）；Eletre X 取配置器 1 492 300（页面 1.449.000 过期）、Emeya 600 GT 取 1 149 318（页面 1,149,000 为取整）；Emira 全变体 API 500+全链路 0 价、Evija 空 body → `官网无价格`；MY 只在素材名 → 官网无年款；NOK 空格千分位 |
+| Renault | ✅ | `www.renault.no` curl 429 Vercel 挑战，真浏览器可开；`/brosjyrer` 8 份官方价目 PDF（`rn-nordic-prod.objects.frb.io` 直链，本机 DLP 包 PDF 须 `curl|cat>tmp.pdf && pdftotext -table` 同命令处理）；乘用车取 `veil.kundepris`，**不取** `LAGERKAMPANJE` 清库价（站点 `Fra 249 900` 是促销，R5 目录价 269 900 起）；商用车取 `Kundepris eks. mva`（与乘用车含税口径不可横比）；**8 车系 35 版本**；无 MY → 官网无年款；未开售的 Twingo / Nye Megane / R5 Turbo 3E / Trafic E-Tech 不入表 |
+| Ferrari | ⚠️ 无价格出表 | `www.ferrari.com/en-NO` 裸 curl 403，带 Chrome UA 200；`/en-NO/auto/car-range` **19 款**；Range + 19 个车型页 0 个 `price/NOK/€`，CTA 只有 `Build your own` / `Request information` → 19 条全 `官网无价格`；无 MY（`Model year` 仅 VIN recall 标签）→ `官网无年款`；PHEV 9 · Gasoline 9 · BEV 1（Luce） |
+| JAC | ✅ | `jacmotors.no` Next.js curl 200；**2 车系 6 版本**（E30X 3 / T9 EV 4x4 3）；官方 iPaper 价目表 `/jac-{e30x,t9}-prisliste/`，POST `GetPDF.ashx` 取签名 PDF（本机 DLP 须同命令 POST→GET→pdftotext）；取 `Veil.pris levert Drammen`：E30X Pure 40 219 900 / Pure 50 254 900 / Nordic 259 900；T9 524 900 / 5-seter Nordic 618 000；2-seter 无价；`219 000` 与 e-JS4 `299 900` 是促销不采；无 MY → `官网无年款`；全 BEV；NOK 空格千分位 |
+
+> 详段：sites/no.md（13 段）
+
+### 俄罗斯 RU
+
+| 品牌 | 结论 | 数据源 / 一句话方法 |
+|---|---|---|
+| Ferrari | ⚠️ 无价格出表 | `www.ferrari.com/ru-RU` 带 Chrome UA 200；`/ru-RU/auto/car-range` **20 款**（比 en-NO 多 `296 Challenge Stradale`）；Range + 车型页 0 个 `price/RUB/₽`，CTA `Конфигуратор` / `Запросить информацию` → 20 条全 `官网无价格`；无 MY → `官网无年款`；PHEV 9 · Gasoline 10 · BEV 1（Luce） |
+| Porsche | ❌ 无俄罗斯市场数据 | `www.porsche.ru` 公共 DNS 无 A 记录（www NXDOMAIN，apex 仅 SOA）、curl TLS 握手失败、http 502、WebFetch 失败；`porsche.com/russia` / `configurator.porsche.com/ru-RU` 均 403 Akamai；`compare.porsche.com/ru-RU` 302 → `en-XW`（国际站，非俄区）→ 无官方 RUB MSRP，不出表 |
+| TENET | ✅ | `tenet.ru` curl 200；5 车系 15 版本；车型页 `Прайс-лист` → perxis PDF（`1.cdn.perxis.ru/originals/<id>/original`），取**常规价行**（= 促销价 + трейд-ин 抵扣 + 额外抵扣）；站点 nav `от X ₽` 是含置换促销价不采；金融示例交叉验证；PDF Cyrillic 无 ToUnicode，用算术关系；金融示例 `2026 г.в.` 绑定车型/trim/价格 → 年款 **2026**；全 Gasoline；RUB 空格千分位 |
+| Rolls-Royce | ⚠️ 无价格出表 | `www.rolls-roycecars.ru`（Rolls-Royce Motor Cars Moscow / БорисХоф 官方经销商）curl 200；9 个当前车型页 0 个 `₽`，CTA `Предложите вашу цену`；`/our-offer/cars-in-stock/` 的库存车价不是 MSRP 不采 → 9 条全 `官网无价格`；无 MY → `官网无年款`；BEV 2 · Gasoline 7 |
+| Evolute | ✅ | `www.evolute.ru` curl 200；4 车型 6 版本（i-JOY Бизнес/Сити+、i-SPACE 5/7 座、i-SPACE 4x4、i-SKY）；站点 `от …` 是叠加补贴/贴息/置换后的促销价，**取 RRЦ**：i-JOY 3 124 000/3 324 000、i-SPACE 3 585 000/3 685 000、4x4 3 890 000、i-SKY 3 515 000；`2026 года производства` 绑定车型/价格 → 年款 **2026**；BEV 3 · REEV 3 |
+| Foton | ✅ | `foton-mbrus.ru` 官方经销商 МБ РУС curl 200；6 车系；`/media-link/<model>-price` PDF 同时列 РРЦ 与 −150 000/−300 000 促销，**取 РРЦ**：V9 5 450 000、V7 5 250 000、G9 3 990 000、G7 3 200 000、VIEW 3 400 000、TOANO 2025 3 400 000 / 2026 3 525 000；TOANO 年款 2025/2026，其余官网无年款；PDF 西里尔文无 ToUnicode，按车型最低 РРЦ 出行 |
+| Maserati | ⚠️ 无价格出表 | `maseratimoscow.ru` 官方经销商站 curl 200；Модификации 展开 **13 版本**（Ghibli Trofeo/GT Hybrid/Modena/Modena S/Modena S Q4 · Levante Trofeo/GT Hybrid/Modena/Modena S · Quattroporte Trofeo/GT/Modena/Modena Q4）；车型页与 `/cars` 0 个 `₽`/整车金额，CTA 只有 `Получить дополнительную информацию` → 13 条全 `官网无价格`；无 MY → `官网无年款`；MHEV 2（GT Hybrid）· Gasoline 11 |
+| SWM | ✅ | `swm-auto.ru` perxis 站 curl 200；3 车系各 1 个 From 价：G01Pro 2 789 900 / G01F 2 639 900 / G05 Pro 2 559 900；⚠ 2025 价目表 PDF 与站点 2026 展示价不一致（G01F PDF 2 367 000），未用旧 PDF；无 MY → `官网无年款`；全 Gasoline |
+| Yangwang | ⚠️ 非厂商 MSRP | `yangwang-russia.ru` 是进口商库存目录；3 台 U8 库存价不是厂商 MSRP，标准任务主表写 `未核实`，不得按颜色取最低库存价出数字行；`Год выпуска 2023` 绑定该台库存车 → 年款 **2023**；PHEV |
+| Soueast | ✅ | `soueast.ru` curl 200；`/media-link/{s06,s07,s09}-pricelist` 官方 PDF；3 车系 8 版本；取常规价（S06 3 029 000/3 409 900、S07 3 399 000/3 549 000、S09 3 899 000/4 099 000），**不取** 2026 折扣价（2 999 000/3 249 000 等）；S07 有 2025/2026 两年款，S09 2025，S06 无年款；全 Gasoline |
+| AVATR | ✅ | `avatr-motors.ru` Nuxt curl 200；07/11/12 三款 10 配置；价格表逐字 `2026 года производства, руб. с НДС`：07 6 600 000/6 900 000/7 000 000、11 6 990 000/8 290 000/8 490 000、12 6 990 000/7 790 000/8 290 000/8 390 000；配置只有内部码；`2026 года производства` 绑定车型/价格 → 年款 **2026**；07 REEV · 11/12 BEV |
+| Belgee | ✅ | `belgee.ru` perxis 站 curl 200；4 车系 14 版本；站点 `от` 是减 100k/150k/200k 促销，取价目 PDF 常规价：X50 2 199 990；X50+ 2 319 990/2 509 990/2 699 990/2 799 990；S50 1 929 990/2 069 990/2 165 990/2 345 990；X70 2 609 990/2 745 990/2 839 990/3 039 990/3 115 990；无 MY → `官网无年款`；X70 三款 48V → MHEV，其余 Gasoline |
+| McLaren | ❌ 无当前市场数据 | `mclarenautomotive.ru` 是旧版俄语站，只列 New GT/570S/720S/Senna 等旧车；无当前俄罗斯在售全集，**不得按全球 lineup 补 Artura/750S/GTS 等行**；标准任务不出 McLaren_RU 表 |
+| Exeed | ⚠️ 部分 | `exeed.ru` + `esteo.ru/exlantix` curl 200；4 车系 7 版本；VX/RX 只展示含 трейд-ин/直降的促销价、perxis 价目表为图片型 PDF → 5 条 `未核实`；EXLANTIX ET/ES 取列表价 6 990 000 / 6 170 000（REEV）；VX 年款 2025，其余无年款；Gasoline 5 · REEV 2 |
+| GAC | ⚠️ 部分 | `gac.ru` curl 200；Комплектации 展开 **17 版本 / 7 车系**；GS4 3 版按官方按揭计算器取配置价 2 999 000 / 3 499 000 / 3 499 000（2026）；GS8 GL/GT/GX Premium 4 199 000/4 599 000/4 949 000、Aion V EX/EX Premium 4 399 000/4 699 000、M8 Lounge 7 999 999（取价目表 RRЦ）；GS3/Empow/Hyptec 及 GS8 GX Traveller、M8 GT/GX/GX Premium 只有促销价或图片型 PDF → 8 条 `未核实` |
+| VGV | ✅ | `vgvmotor.ru` curl 200；3 车系 9 版本；官方表分列 RRЦ 与「с учетом всех выгод」，取 RRЦ：U70 PLUS 1 999 000/2 099 000、U70 PRO 2 579 990/2 639 900/2 794 900、U75 PLUS 2 999 900/3 049 900/3 199 900；年款 2026/2025/2024/官网无年款；全 Gasoline |
+| Moskvich | ✅ | `moskvich.ru` + `moskvich-m.ru` 本机 TCP 超时，但官方页面/PDF 可读；`от` 多为促销，取价格表常规价（含 VAT）；28 条 / 9 车型，CNG 4 条 `官网无价格`；仅明确的 MY26 写 MY2026，生产年不当年款 |
+| Hongqi | ⚠️ 部分待复核 | `hongqi.ru` API + 车型页 + 10 份 PDF 交叉；`Сезонная цена` 必须逐条排除 trade-in/折扣，HS3 Comfort 已确认含 250 000 трейд-ин → `未核实`，H5 Comfort `官网无价格`；其余数字价待复核；48V=MHEV、GUOYA HEV、E-HS9 BEV |
+| KGM | ✅ | `kgm.ru` 无配置器/API；4 车型官方 PDF 取未折扣 МРЦП，税价未标注；23 条，Tivoli СИТИ `未核实`；Torres/Rexton 明确模型年 2024/2025，生产年不当年款；全 Gasoline |
+| Denza | ⚠️ 部分 | `denza-russia.ru` 仅 Z9 混动 `от 8 400 000 ₽`；Z9 GT/N9 无价、Z9 纯电 `未核实`；5 条 / 3 车型；官方标题给 2024/2025；PHEV 3 · BEV 2 |
+| JAC | ✅ | `jaccar.ru` 静态价格表 + perxis PDF 取未折扣 РРЦ；3 车型 8 版本，T8 PRO 汽油版口径冲突 `未核实`；RF8 明确 2026 MY，生产年不当年款；Gasoline 6 · Diesel 2 |
+| Kaiyi | ⚠️ 无价格出表 | `kaiyi-auto.ru` 4 车型无配置器/价格 API/价目表；`/owners/regulations-to` 明确 7 个动力版本（E5/X3 各 2、X3 PRO 1、X7 2），全 `官网无价格`；四本官方说明书无 MY；全 Gasoline |
+
+> 详段：sites/ru.md（22 段）
+
 ### 新西兰 NZ / 菲律宾 PH / 全球
 
 | 品牌 | 结论 | 数据源 / 一句话方法 |
@@ -292,8 +347,9 @@
 | 法拉利 / Aston Martin | ❌ | 官方从不公布售价，仅经销商询价 |
 | IM Motors 智己 | ❌ | 站点全通但 API 只有规格表，0 价格字段 |
 | Rolls-Royce 劳斯莱斯 | ⚠️ 无价格出表 | 官网**全站不标价**（中/英/美三站 0 个价格，CTA 只有 `Enquire`；配置器页写明须与经销商确认）→ 仍出表，MSRP 填 `官网无价格`；⚠ 沙箱出口被 302 到 `.com.cn` |
+| Lamborghini | ⚠️ 无价格出表 | `www.lamborghini.com/en-en` curl 200；官网不公布 MSRP：车型页 JSON-LD 无 `offers/price`、配置器全流程 0 金额、只有 `ENQUIRE`；Range 3 车系 6 车型（Temerario / Temerario Spyder / Revuelto / Revuelto SV / Urus SE / Urus SE Performante）全入表、MSRP 全 `官网无价格`；ENQUIRE 表单逐字 `2027 Lamborghini …` → 年款 2027；均 PHEV |
 
-> 详段：sites/global.md（5 段）
+> 详段：sites/global.md（6 段）
 
 > ⚠ **本索引与详段的关系**：本文件只是**路由 + 通用方法**；每个市场的踩坑细节（字段名、正则、失败过程）在 **`sites/<market>.md`**（各表末尾有「详段」指向）。两者冲突时以市场文件里的详段为准。
 > ⚠ **找不到对应市场文件时**：先按 `## 数据源定位方法（通用）` 走，采完把坑位追加到 `sites/<market>.md` 并在本索引加一行。

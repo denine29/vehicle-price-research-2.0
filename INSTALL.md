@@ -5,9 +5,11 @@
 把整个 `vehicle-price-research/` 目录放进 agent 的 skills 目录：
 
 ```bash
+# Qoder（用户级 / 项目级）
+cp -r vehicle-price-research ~/.qoder-cn/skills/
+# 或放进项目的 .qoder/skills/vehicle-price-research/
 # CodeBuddy / Claude Code
 cp -r vehicle-price-research ~/.codebuddy/skills/
-# 或 Claude Code 的 skills 目录
 cp -r vehicle-price-research ~/.claude/skills/
 ```
 
@@ -30,8 +32,8 @@ cp -r vehicle-price-research ~/.claude/skills/
 | 列 | 规则 |
 |---|---|
 | 官网型号名称 | **发动机/动力必须并入此列**，用官网原始写法（`4*4` 不写 `4x4`） |
-| 年款 | 官网标 MY/millesime 才写；没标写「官网无年款」，**严禁推断** |
-| 官网MSRP | 按市场原生千分位（欧元 `28.220,00` / 美元英镑 `102,700`），**不带货币符号**，单元格**文本格式** |
+| 年款 | 官网把年份绑定到具体车辆/版本/价格就写（`MY` / `Model Year`、俄语 `год выпуска` / `2026 г.в.`、价目表年份列等）；小数模型年按原值照写；没标写「官网无年款」，**严禁推断** |
+| 官网MSRP | 按市场原生千分位（欧元 `28.220,00` / 美元英镑 `102,700` / 挪威俄罗斯 `630 500`），**不带货币符号**，单元格**文本格式** |
 | 燃油分类 | 英文原名：`Gasoline` `Diesel` `MHEV` `HEV` `PHEV` `BEV` `FCV` `LPG` `Dual Fuel` `REEV` |
 
 ⚠ 官网写 "Hybrid" 不等于 HEV：48V 轻混 → **MHEV**；插电 → **PHEV**。
@@ -50,21 +52,23 @@ vehicle-price-research/
 ├── INSTALL.md                   本文件
 ├── examples/                    ★ 5 份现行规范样例（双 sheet）+ legacy/ 7 份历史单 sheet + README
 ├── references/
-│   ├── sites.md                 索引 + 通用方法 + 止损判定（约 260 行）
-│   ├── sites/                   分市场详段（be/de/in/th/uk/dk/us/fr/es/cl/gr/kr/au/jp/ar/br/global；段数以 check_sites 为准）
+│   ├── sites.md                 索引 + 通用方法 + 止损判定（按市场分段读）
+│   ├── sites/                   分市场详段（清单见 _map.json）+ _template.md
 │   │                            + _map.json（段→文件映射）+ _template.md（新市场/新站模板）
-│   └── workflow.md              给不支持 skill 的 agent 用的可复制提示词模板
+│   ├── workflow.md              给不支持 skill 的 agent 用的可复制提示词模板
+│   └── year-evidence.md         实验性年款候选管线说明（非稳定门槛）
 └── scripts/
     ├── triage.js                 ★ 站点可达性分诊（Node 版，Windows/无 Python 环境用这个）
     ├── triage.py                 同上的 Python 版（需 python3 + openssl）
     ├── fetch_pdf.py             Akamai 拦 PDF 的破封脚本（先 ctx.request.get，再回退浏览器内 fetch）
     ├── write_xlsx.js            ★ 唯一生成器：8 列 + 副表（exceljs 已内置在 scripts/node_modules）
-    ├── selftest.js              ★ 生成器自测（5 组夹具，不需要 exceljs/网络）：`node selftest.js`
+    ├── selftest.js              ★ 生成器自测（9 组夹具，不需要 exceljs/网络）：`node selftest.js`
     ├── check_all.js             ★ 一条命令跑 selftest + check_sites（交付前闸门）
     ├── update_sites_meta.js     ★ 知识库元信息同步（段数/品牌清单/_map.json 哈希，不动正文）
     ├── check_sites.js           ★ 知识库一致性检查：`node check_sites.js`（索引/段数/围栏/哈希）
     ├── verify_xlsx.js          ★ 成品回读校验（结构 + 年款/日期格式 + 与 rows.json 逐行比对）
     ├── verify_dir.js           ★ 交付目录级校验（同品牌多文件 / _vN / 重复交付）
+    ├── collect_year_evidence.js / build_year_basis.js / selftest_year_evidence.js  实验性年款工具（非稳定门槛）
     └── format_output.py         旧版生成器（单 sheet / 仅欧元），已被 write_xlsx.js 取代
 ```
 
@@ -92,7 +96,7 @@ vehicle-price-research/
 
 ## 怎么用 sites 知识库最快
 
-1. 打开 `references/sites.md`（约 260 行，只有索引 + 通用方法 + 止损判定）。
+1. 打开 `references/sites.md`，只读**目标市场块 + 通用方法 + 止损判定**，不要整读索引。
 2. 按市场找到品牌行，看结论（✅/⚠️/❌）和一句话方法，再按该表末尾的「详段：sites/<market>.md」去读**对应市场文件**（`grep -n "<品牌>"`）。
 3. 索引里没有的新站，按 `## 数据源定位方法（通用）` 走：配置器 → 车型页 From → 官方价格表补全；采完追加到市场文件（模板 `sites/_template.md`）+ 索引加一行，跑 `node scripts/check_sites.js`。
 
@@ -100,7 +104,4 @@ vehicle-price-research/
 
 ## 已覆盖市场
 
-西班牙 ES · 比利时 BE · 丹麦 DK · 智利 CL · 希腊 GR · 泰国 TH · 美国 US · 印度 IN · 韩国 KR ·
-英国 UK · 德国 DE · 法国 FR · 新西兰 NZ · 菲律宾 PH · 澳大利亚 AU · 日本 JP · 阿根廷 AR · 全球站
-
-共 50+ 个品牌站点，其中 ✅ 可采 30+ 个。
+以 `references/sites/_map.json` 为准；运行 `node scripts/check_sites.js` 可查看每个市场的索引行、段数与证据欠账。当前版本行中的市场数/段数由 `update_sites_meta.js` 自动同步，不在本文手写枚举。

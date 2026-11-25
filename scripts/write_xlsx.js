@@ -3,7 +3,7 @@
 把采集结果写成 vehicle-price-research 规定的 8 列 XLSX。
 
 用法：
-  node write_xlsx.js <rows.json> <输出前缀> --date YYYYMMDD [--money euro|lakh|comma|comma2] [--year-basis <year_basis.json>]
+  node write_xlsx.js <rows.json> <输出前缀> --date YYYYMMDD [--money euro|comma|comma2|lakh|space] [--year-basis <year_basis.json>]
 
 year_basis.json（可选，写了就在工作簿里加「年款依据」副表）：
   [{"brand","model","year","basis","quote","source"}, ...]
@@ -15,6 +15,7 @@ rows.json: [{"brand","model","version","year","price","discontinued","fuel"}, ..
     comma -> 102,700     （美元/英镑/泰铢等，四舍五入到整数）
     comma2-> 106,230.27  （澳元等需要保留分的上路价：逗号千分位 + 两位小数）
     lakh  -> 2,11,29,000 （印度 lakh 分组）
+    space -> 630 500     （挪威/俄罗斯等空格千分位，四舍五入到整数）
   单元格只放数字，不带货币符号
   year 缺省 -> 官网无年款；discontinued 缺省 -> 否；fuel 缺省 -> 未标注
 */
@@ -22,6 +23,8 @@ const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
 
+const YEAR_OK = /^(?:\d{4}(?:\.\d{1,2})?|\d{2}\.\d{1,2}|MY\d{2,4}(?:\.\d{1,2})?|\d{2,4}\.\d{1,2}MY|官网无年款)$/;
+const MONEY_MODES = new Set(['euro', 'comma', 'comma2', 'lakh', 'space']);
 const FUEL = {
   gasoline: 'Gasoline', diesel: 'Diesel', mhev: 'MHEV', fcv: 'FCV', lpg: 'LPG',
   bev: 'BEV', 'dual fuel': 'Dual Fuel', phev: 'PHEV', hev: 'HEV', reev: 'REEV',
@@ -115,6 +118,9 @@ function fmtPrice(p, mode) {
     const rest = s.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ',');
     return rest + ',' + last3;
   }
+  if (mode === 'space') {
+    return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
   return Math.round(n).toLocaleString('en-US');
 }
 
@@ -146,7 +152,7 @@ async function main() {
   const { opts, pos } = parseArgs(process.argv.slice(2));
   const [inp, prefix] = pos;
   if (!inp || !prefix) {
-    console.error('用法: node write_xlsx.js <rows.json> <输出前缀> --date YYYYMMDD [--money euro|lakh|comma] [--year-basis <year_basis.json>]');
+    console.error('用法: node write_xlsx.js <rows.json> <输出前缀> --date YYYYMMDD [--money euro|comma|comma2|lakh|space] [--year-basis <year_basis.json>]');
     process.exit(1);
   }
   const arg = (k, d) => (opts[k.replace(/^--/, '')] !== undefined ? opts[k.replace(/^--/, '')] : d);
@@ -155,9 +161,24 @@ async function main() {
   const date = dateArg || localDate();
   const moneyArg = arg('--money', null);
   const money = moneyArg || 'comma';
+  if (!MONEY_MODES.has(money)) { console.error('[FAIL] --money 不支持: ' + money + '（可选 euro|comma|comma2|lakh|space）'); process.exit(1); }
   if (!moneyArg) console.warn('[WARN] 未指定 --money，按 comma（逗号千分位）处理；欧元区请传 --money euro');
 
   const rows = readJson(inp);
+  if (!Array.isArray(rows)) { console.error('[FAIL] rows.json 顶层必须是数组'); process.exit(1); }
+  if (!/^\d{8}$/.test(date)) { console.error('[FAIL] --date 必须为 YYYYMMDD: ' + date); process.exit(1); }
+  const seenRows = new Set();
+  rows.forEach((r, i) => {
+    const lineNo = i + 2;
+    for (const field of ['brand', 'model', 'version']) {
+      if (!String(r[field] ?? '').trim()) { console.error(`[FAIL] 第${lineNo}行 ${field} 为空（品牌/车型/型号三列不得为空）`); process.exit(1); }
+    }
+    const key = [r.brand, r.model, r.version, r.year || '官网无年款'].map(x => String(x).trim()).join('||');
+    if (seenRows.has(key)) { console.error(`[FAIL] 第${lineNo}行 型号重复: ${key}`); process.exit(1); }
+    seenRows.add(key);
+    const disc = r.discontinued || '否';
+    if (!['是', '否'].includes(disc)) { console.error(`[FAIL] 第${lineNo}行 discontinued 只能是 是/否: ${disc}`); process.exit(1); }
+  });
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet('官网价');
   const widths = { A: 16, B: 20, C: 62, D: 14, E: 16, F: 10, G: 12, H: 12 };
@@ -175,7 +196,7 @@ async function main() {
   let lineNo = 2;
   for (const r of rows) {
     const yv = String(r.year || '官网无年款').trim();
-    if (!/^(\d{4}|MY\d{2,4}|官网无年款)$/.test(yv)) {
+    if (!YEAR_OK.test(yv)) {
       console.warn(`[WARN] 第${lineNo}行 年款不合规: "${yv}" —— 只能单个值；ano/modelo 双年份取模型年（26/27→2027），原文放副表`);
     }
     lineNo++;
@@ -270,4 +291,4 @@ async function main() {
 if (require.main === module) {
   main().catch(e => { console.error('[FAIL]', e.message); process.exit(1); });
 }
-module.exports = { fuelClass, fmtPrice, parsePrice };
+module.exports = { fuelClass, fmtPrice, parsePrice, YEAR_OK, MONEY_MODES };

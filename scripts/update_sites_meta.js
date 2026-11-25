@@ -32,7 +32,7 @@ const normBody = b => {
   if (a.length && a[a.length - 1].trim() === '---') { a.pop(); while (a.length && a[a.length - 1].trim() === '') a.pop(); }
   return a;
 };
-const sha = a => crypto.createHash('sha256').update(a.join('\n')).digest('hex');
+const sha = a => crypto.createHash('sha256').update(a.map(x => x.replace(/\r$/, '')).join('\n')).digest('hex');
 const cleanBrand = t => {
   let b = t.split('（')[0].replace(/🇬🇧/g, '').trim();
   b = b.replace(/\s*·.*$/, '');
@@ -42,7 +42,8 @@ const cleanBrand = t => {
 };
 const clean = s => s.replace(/\s+$/, '');
 
-const siteLines = fs.readFileSync(SITES, 'utf8').split('\n');
+const siteLines = fs.readFileSync(SITES, 'utf8').split(/\r?\n/);
+const sitesNl = fs.readFileSync(SITES, 'utf8').includes('\r\n') ? '\r\n' : '\n';
 const map = fs.existsSync(MAP) ? JSON.parse(fs.readFileSync(MAP, 'utf8')) : { markets: {} };
 const files = fs.readdirSync(DIR).filter(f => f.endsWith('.md') && !f.startsWith('_'));
 const changes = [];
@@ -52,7 +53,8 @@ for (const f of files.sort()) {
   const key = f.replace(/\.md$/, '');
   const fp = path.join(DIR, f);
   const raw = fs.readFileSync(fp, 'utf8');
-  const L = raw.split('\n');
+  const nl = raw.includes('\r\n') ? '\r\n' : '\n';
+  const L = raw.split(/\r?\n/);
   if (L[L.length - 1] === '') L.pop();
 
   const hs = [];
@@ -79,7 +81,7 @@ for (const f of files.sort()) {
       if (L[di2] !== want2) { changes.push(f + ' 实测日期 → ' + newDate); L[di2] = clean(want2); }
     }
   }
-  const out = L.join('\n') + '\n';
+  const out = L.join(nl) + nl;
   if (out !== raw && !dry) fs.writeFileSync(fp, out, 'utf8');
 }
 
@@ -93,7 +95,7 @@ for (let i = 0; i < sl.length; i++) {
   if (cnt === null) { console.log('[WARN] 索引指向不存在的文件: sites/' + key + '.md'); continue; }
   if (+m[2] !== cnt) { changes.push('sites.md 「' + key + '」详段: ' + m[2] + ' → ' + cnt + ' 段'); sl[i] = '> 详段：sites/' + key + '.md（' + cnt + ' 段）'; }
 }
-if (!dry && sl.join('\n') !== siteLines.join('\n')) fs.writeFileSync(SITES, sl.join('\n'), 'utf8');
+if (!dry && sl.join(sitesNl) !== siteLines.join(sitesNl)) fs.writeFileSync(SITES, sl.join(sitesNl), 'utf8');
 
 // 3) _map.json
 const mapOut = JSON.stringify(meta, null, 1);

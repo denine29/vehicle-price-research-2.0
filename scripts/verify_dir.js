@@ -14,13 +14,13 @@
 const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
+const { YEAR_OK } = require('./write_xlsx');
 
 const DIR = process.argv[2];
 if (!DIR) { console.error('用法: node verify_dir.js <交付目录>'); process.exit(1); }
 const abs = path.resolve(DIR);
 if (!fs.existsSync(abs)) { console.error('[FAIL] 目录不存在: ' + abs); process.exit(1); }
 
-const YEAR_OK = /^(\d{4}|MY\d{2,4}|官网无年款)$/;
 const cellText = c => {
   const v = c.value;
   if (v === null || v === undefined) return '';

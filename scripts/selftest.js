@@ -98,6 +98,31 @@ CASES.push({
 });
 
 CASES.push({
+  name: 'space 千分位 + 多种小数模型年（无误报）',
+  rows: [
+    { brand: 'ZEEKR', model: '001', version: 'Long Range RWD', year: '官网无年款', price: 630500, discontinued: '否', fuel: 'BEV' },
+    { brand: 'Ford', model: 'Capri', version: 'Capri 1.5', year: '2027.25', price: 50000, discontinued: '否', fuel: 'Gasoline' },
+    { brand: 'Ford', model: 'Capri', version: 'Capri 1.5', year: '2026.50', price: 45000, discontinued: '否', fuel: 'Gasoline' },
+    { brand: 'Volvo', model: 'XC60', version: 'B5', year: 'MY2027.5', price: 600000, discontinued: '否', fuel: 'Gasoline' },
+    { brand: 'Ford', model: 'Tourneo', version: 'Custom', year: '26.50', price: 700000, discontinued: '否', fuel: 'Diesel' },
+    { brand: 'Isuzu', model: 'D-Max', version: 'LS-U', year: '25.5MY', price: 800000, discontinued: '否', fuel: 'Diesel' },
+    { brand: 'CUPRA', model: 'Formentor', version: 'VZ', year: 'MY25.5', price: 900000, discontinued: '否', fuel: 'Gasoline' },
+  ],
+  args: ['--money', 'space'],
+  expect: [
+    ['ZEEKR', '001', 'Long Range RWD', '官网无年款', '630 500', '否', date, 'BEV'],
+    ['Ford', 'Capri', 'Capri 1.5', '2027.25', '50 000', '否', date, 'Gasoline'],
+    ['Ford', 'Capri', 'Capri 1.5', '2026.50', '45 000', '否', date, 'Gasoline'],
+    ['Volvo', 'XC60', 'B5', 'MY2027.5', '600 000', '否', date, 'Gasoline'],
+    ['Ford', 'Tourneo', 'Custom', '26.50', '700 000', '否', date, 'Diesel'],
+    ['Isuzu', 'D-Max', 'LS-U', '25.5MY', '800 000', '否', date, 'Diesel'],
+    ['CUPRA', 'Formentor', 'VZ', 'MY25.5', '900 000', '否', date, 'Gasoline'],
+  ],
+  warns: [],
+  forbiddenWarns: ['年款不合规'],
+});
+
+CASES.push({
   name: '年款依据副表 + 重复分组告警',
   rows: [
     { brand: 'X', model: 'A', version: 'v1', year: 'MY2027', price: 1000, discontinued: '否', fuel: 'Benzine' },
@@ -114,6 +139,30 @@ CASES.push({
   ],
   warns: ['同一分组出现多次'],
   sheet2: ['品牌', '官网车型名称', '年款', '覆盖型号数', '年款依据（判定过程）', '官网原文（逐字）', '来源位置'],
+});
+
+CASES.push({
+  name: '拒绝空品牌/车型/型号',
+  rows: [{ brand: 'X', model: '', version: 'v1', year: '2026', price: 1000, discontinued: '否', fuel: 'Gasoline' }],
+  args: ['--money', 'comma'],
+  expectFail: 'model 为空',
+});
+
+CASES.push({
+  name: '拒绝重复型号行',
+  rows: [
+    { brand: 'X', model: 'A', version: 'v1', year: '2026', price: 1000, discontinued: '否', fuel: 'Gasoline' },
+    { brand: 'X', model: 'A', version: 'v1', year: '2026', price: 1000, discontinued: '否', fuel: 'Gasoline' },
+  ],
+  args: ['--money', 'comma'],
+  expectFail: '型号重复',
+});
+
+CASES.push({
+  name: '拒绝非法数据日期',
+  rows: [{ brand: 'X', model: 'A', version: 'v1', year: '2026', price: 1000, discontinued: '否', fuel: 'Gasoline' }],
+  args: ['--money', 'comma', '--date', '2026-11-25'],
+  expectFail: '--date 必须为 YYYYMMDD',
 });
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vpr-selftest-'));
@@ -135,11 +184,16 @@ CASES.forEach((c, idx) => {
   const r = spawnSync(process.execPath, args, { encoding: 'utf8' });
   const logs = (r.stdout || '') + (r.stderr || '');
   const problems = [];
-  if (r.status !== 0) problems.push('退出码 ' + r.status + '：' + logs.trim());
+  if (c.expectFail) {
+    if (r.status === 0) problems.push('应失败但成功了');
+    else if (!logs.includes(c.expectFail)) problems.push('失败原因不符: ' + logs.trim());
+  } else if (r.status !== 0) problems.push('退出码 ' + r.status + '：' + logs.trim());
 
   let dump = null;
-  try { dump = JSON.parse(fs.readFileSync(outPrefix + '.xlsx.dump.json', 'utf8')); }
-  catch (e) { problems.push('没有生成输出'); }
+  if (!c.expectFail) {
+    try { dump = JSON.parse(fs.readFileSync(outPrefix + '.xlsx.dump.json', 'utf8')); }
+    catch (e) { problems.push('没有生成输出'); }
+  }
 
   if (dump) {
     const got = dump[0].rows;
@@ -157,7 +211,8 @@ CASES.forEach((c, idx) => {
       else if (JSON.stringify(s2.rows[0]) !== JSON.stringify(c.sheet2)) problems.push('副表表头不符: ' + JSON.stringify(s2.rows[0]));
     }
   }
-  c.warns.forEach(w => { if (logs.indexOf(w) < 0) problems.push('缺少预期告警: ' + w); });
+  (c.warns || []).forEach(w => { if (logs.indexOf(w) < 0) problems.push('缺少预期告警: ' + w); });
+  (c.forbiddenWarns || []).forEach(w => { if (logs.indexOf(w) >= 0) problems.push('出现不应有的告警: ' + w); });
 
   if (problems.length) {
     failed++;

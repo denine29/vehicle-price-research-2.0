@@ -1,6 +1,6 @@
 # 英国 UK — 站点坑位详段
 
-> 市场码 UK · 5 段 · 品牌：Honda UK 本田英国 / Hyundai UK 现代英国 / Peugeot / Fiat / Ford
+> 市场码 UK · 12 段 · 品牌：Honda UK 本田英国 / Hyundai UK 现代英国 / Peugeot / Fiat / Ford / MG / Mitsubishi / Maxus / KGM / KG Mobility / Subaru / Škoda / Volvo
 > 返回索引 [../sites.md](../sites.md)（含通用方法 / 止损判定 / 集团级套路）
 > 最后实测：2026-10-30 · 文中 snapshotVersion / token / 车型 id 均为当时实测值，必须现取
 
@@ -268,3 +268,120 @@ T.Custom   : ... 57195 46,050 55,260 50,989.83 60,492.80 351.61 703.22 → 60,49
 燃油：Diesel 37 · BEV 36 · PHEV 21 · Gasoline 15 · MHEV 13 · HEV 7。
 
 **未纳入**：Mustang GTD（无价目表、官网无价）；Ford 商用车线（Transit / Ranger 等，属 `/vans-and-pickups`）。
+
+---
+
+### MG UK（`www.mg.co.uk`：**配置器页逐 trim 给 `Cash Price Details Total`；15 车型 35 版本**）✅
+
+- **可达性**：`www.mg.co.uk` curl 200；车型页 `/model/<slug>` 与配置器 `/configurator/<slug>` 均 200（2026-11-25）。
+- **★ 车型/版本（15 车系 35 版本）**：MG3（SE 17 995）· MG3 Hybrid+（SE 19 995 / Trophy 21 995）· MG4 EV Urban（Comfort SR 23 495 / Comfort LR 25 995 / Premium LR 28 495 / Design Edition 29 495）· MG4 EV（Premium LR 30 495 / Premium ER 33 495 / XPOWER 34 495）· MG ZS（SE 21 495）· MG ZS Hybrid+（SE 23 995 / Trophy 26 495）· MGS5 EV（SE 28 995 / SE LR 31 495 / Trophy LR 33 995）· MGS6 EV（SE LR 37 995 / Trophy LR 40 995 / Trophy Dual Motor 43 995）· MG HS（SE 27 495 / Trophy 29 995）· MG HS Hybrid+（SE 30 495 / Trophy 32 995）· MG HS PHEV（SE 33 495 / Trophy 35 995）· MGS9 PHEV（Comfort 34 210 / Premium 37 995）· MG IM5（75 SR 39 950 / 100 LR 45 495 / 100 Performance 48 995）· MG IM6（100 LR 48 495 / 100 Performance 51 495 / 100 Launch Edition 53 495）· MG Cyberster（Trophy 55 245 / GT 60 245）。
+- **取价源**：配置器页 `Compare trims` 段逐 trim `£X`；页面 `Price Details Total` 与 trim 价一致。全系 `官网无年款`（无 MY/model year 字段）。
+- **燃油**：BEV 21 · HEV 6 · PHEV 4 · Gasoline 4。
+- **交付结果**：`MG_UK_官网价_20261125.xlsx`，**35 条 / 15 车系**；£17 995–£60 245。
+- **实测**：2026-11-25
+- **来源**：`https://www.mg.co.uk/model/<slug>`；`https://www.mg.co.uk/configurator/<slug>`（slug 同车系）
+- **原文**：`Compare trims Premium Long Range £30,495 Premium Extended Range £33,495 XPOWER £34,495`；`Price Details Total: £30,495`；`MG Cyberster Trophy £55,245 GT £60,245`
+
+---
+
+### Mitsubishi UK（`www.mitsubishi-motors.co.uk`：**当前 2 车系 L200 / Outlander PHEV；model-range 页逐 trim 给价**）✅
+
+- **可达性**：`www.mitsubishi-motors.co.uk` curl 200（末尾偶发超时但已收全页）；`/model-range/{l200,outlander-phev}/` 200（2026-11-25）。
+- **★ 车型/版本（2 车系 4 版本）**：L200 **Titan £36 295 / Barbarian £39 995**（`CVOTR (Excl. VAT)`）· Outlander PHEV **Nativa £46 995 / Diamond £49 995**（`OTR Price`）。
+- **年款**：车型页无 MY/model year → 全部 `官网无年款`。
+- **燃油**：L200 Diesel；Outlander PHEV = PHEV。
+- **交付结果**：`Mitsubishi_UK_官网价_20261125.xlsx`，**4 条 / 2 车系**；£36 295–£49 995；L200 为不含 VAT 的 CVOTR，Outlander 为 OTR。
+- **实测**：2026-11-25
+- **来源**：`https://mitsubishi-motors.co.uk/model-range/l200/`；`https://mitsubishi-motors.co.uk/model-range/outlander-phev/`
+- **原文**：`Trim Levels Titan Barbarian`；`CVOTR (Excl. VAT) From £36,295` / `£39,995`；`Trim Levels Nativa Diamond`；`OTR Price From £46,995` / `£49,995`
+
+---
+
+### Maxus UK（`www.maxus.co.uk`：**GoDaddy 停放页 `/lander`，不是官方站；无车型/价格**）❌
+
+- **可达性**：`www.maxus.co.uk` 返回 114 B 的 `<script>window.location.href="/lander"</script>`；`/lander` 200，`window.LANDER_SYSTEM="PW"`、`_trfd.push({ap:"parking"})`，是 GoDaddy parking 页（2026-11-25）。
+- **结论**：该域名已停放，不是 Maxus 英国官方站；无车型、无价格，按 §E 止损，不出表。若需 Maxus UK，应找其现任进口商/官方域名。
+- **实测**：2026-11-25
+- **来源**：`https://www.maxus.co.uk/`；`https://www.maxus.co.uk/lander`
+- **原文**：`window.location.href="/lander"`；`window.LANDER_SYSTEM="PW"`；`window._trfd.push({ap:"parking"})`
+
+---
+
+### KGM / KG Mobility（UK 英国 `www.kgm-motors.co.uk`：**模型级 From 价 9 款；官网不公开 trim 级价格**）✅
+
+- **可达性**：`www.kgm-motors.co.uk` curl 200（Next.js 风格，181 KB）；`/new-cars/` 与各车型页均 200（2026-11-23）。
+- **★ 车型/From 价**：**Tivoli £24,045**（Gasoline）· **Torres Hybrid £35,995**（HEV）· **Torres EVX £35,495**（BEV，inc £1,500 ECG）· **Actyon Hybrid £38,995**（HEV）· **Rexton £42,615**（Diesel）· **Rexton Commercial £35,995 exc. VAT**（Diesel）· **Musso Pick-Up £32,980 exc. VAT**（Diesel）· **Musso EV £39,995**（BEV，inc £5,000 PiVG）· **Musso Rhino £38,995 exc. VAT**（Diesel）。
+- **口径**：乘用车是 OTR From；Rexton Commercial / Musso Pick-Up / Musso Rhino 是 **exc. VAT**；Torres EVX 标 `inc £1,500 ECG`、Musso EV 标 `inc £5,000 PiVG`，即已含政府补贴，交付说明标注，不另加/减。
+- **年款**：车型页只有 `From £`，无 MY/model year；`2025 KGM range` 是 WLTP 数据年度、`2026` 是版权年 → 全部 `官网无年款`。
+- **交付结果**：`KGM_UK_官网价_20261123.xlsx`，**9 条 / 9 车型**；£24,045–£42,615；Gasoline 1 · HEV 2 · Diesel 4 · BEV 2。
+- **实测**：2026-11-23
+- **来源**：`https://www.kgm-motors.co.uk/new-cars/`；`https://www.kgm-motors.co.uk/new-cars/<model>/`
+- **原文**：`Tivoli Mini SUV From £24,045`；`Torres Hybrid Hybrid SUV From £35,995`；`Torres EVX Electric SUV inc £1,500 ECG From £35,495`；`Rexton Commercial Car derived commercial 2-seater From £35,995 exc. VAT`；`Musso EV Electric Pick-Up inc £5,000 PiVG From £39,995`
+
+---
+
+### Subaru（UK 英国 `subaru.co.uk`：**车型页 Price Breakdown 逐 trim 的 Total On The Road Price，14 版本**）✅
+
+- **可达性**：`subaru.co.uk` curl 200（351 KB）；`/overview/{crosstrek,forester,outback,solterra,e-outback}` 均 200（2026-11-23）。
+- **★ 取价源**：车型页 `Price Breakdown` 表逐 trim 给 `Basic Retail / VAT / Total Retail / Delivery £600 / 12 Months RFL / DVLA £55 / Total On The Road Price` → **取最后一列 OTR**。
+- **★ 车型/trim/OTR**：
+  - **Crosstrek**：2.0i e-Boxer Limited 5dr Lineartronic **£35,995** · 2.0i e-Boxer Touring 5dr Lineartronic **£38,100**
+  - **Forester**：2.0i Limited **£39,995** · 2.0i Field **£41,545** · 2.0i Touring **£44,100**
+  - **Outback**：2.5i Limited **£40,495** · 2.5i Field **£42,655** · 2.5i Touring **£45,645**
+  - **Solterra**：Limited **£52,505** · Touring **£55,505**
+  - **e-Outback**：AWD **£49,995** · FIELD **£51,995** · TOURING **£52,495** · TOURING+ **£54,995**
+- **年款**：Price Breakdown/车型页无 MY/model year → 全部 `官网无年款`。
+- **燃油**：Crosstrek / Forester 的 e-Boxer 为 **MHEV**（官网写 Self-Charging Hybrid Petrol，按 BE 段同一 e-BOXER 判法）· Outback 2.5i = Gasoline · Solterra / e-Outback = BEV。
+- **交付结果**：`Subaru_UK_官网价_20261123.xlsx`，**14 条 / 5 车系**；£35,995–£55,505；MHEV 5 · Gasoline 3 · BEV 6。
+- **实测**：2026-11-23
+- **来源**：`https://subaru.co.uk/overview/{crosstrek,forester,outback,solterra,e-outback}`
+- **原文**：`2.0i e-Boxer Limited 5dr Lineartronic … Total On The Road Price £35,995.00`；`2.0i Limited | £39,995.00`；`2.5i Touring … £45,645.00`；`Limited Touring … Total On The Road Price £52,505.00 / £55,505.00`；`AWD | £49,995.00 FIELD | £51,995.00 TOURING | £52,495.00 TOURING+ | £54,995.00`
+
+---
+
+### Škoda（UK 英国 `www.skoda.co.uk`：**range 页只给 trim 入门 `From*` 价；完整版本必须走配置器 `GetEnginePricesByTrim`，14 车系 171 个 trim×发动机组合，MY2027**）✅
+
+- **可达性**：`www.skoda.co.uk` curl 200；`/new-cars/<model>/<model>-range` 均 200；配置器 `cc.skoda-auto.com` 需浏览器 session（裸 curl `Invalid use - 100`），用页面内 `fetch`（2026-11-23）。
+- **⚠ 首采漏版原因（用户指出）**：range 页每个 trim 只写 `See more <trim> From* £ X`，X 是**该 trim 入门发动机价**；同一 trim 点进去还有 1.0 MPI / 1.0 TSI 95 PS / 1.0 TSI 116 PS 6G Man / 116 PS DSG 等，价格各不同。只解析 range 页会得到 73 条、漏掉一半以上（实际 171 条）。**必须取配置器逐发动机价**。
+- **★ 完整取价链路**：
+  1. 从任一 range 页配置器链接取 `snapshotVersion`（如 `ff1a936e-…`）、`modelCode`（class）。
+  2. 取 webcache：`https://c3poweb.blob.core.windows.net/webcache/<sv>/GBR/2027/<class>/trimlines-en-GB.json`（每个 trim 的 `id`/`name`/`carlineName`/`defaultModelId`）与 `.../engines-en-GB.json`（`id`/`name`/`power.formatted`/`transmissionName`/`fuelName`/`trimlines[]`）。
+  3. 逐 trim `POST https://cc.skoda-auto.com/c3popr/v3/GetEnginePricesByTrim`，body **`{"ModelId":"<defaultModelId>"}`** → `prices.<engineId>.price`（OTR）。
+  4. 以 `trimline.id` 关联 engines JSON，拼 `{车系} {trim} {发动机} {功率} {变速箱}`。
+- **★ class 映射**：PY Elroq · 5A Enyaq + Enyaq Coupé · PX Epiq · PJ Fabia Hatch · NW Kamiq + Scala · NU Karoq · PS Kodiaq · PV Octavia Hatch + Estate · PZ Peaq · NZ Superb Hatch + Estate。
+- **★ 车系/版本数（14 / 171）**：Elroq 7 trims · Enyaq 7 · Enyaq Coupé 4 · Epiq 6 · Fabia 5 · Kamiq 4 · Karoq 5 · Kodiaq 10 · Octavia Estate 5 · Octavia Hatch 6 · Peaq 3 · Scala 3 · Superb Estate 4 · Superb Hatch 4；展开发动机后共 171 行。
+  - Fabia SE Edition 例：1.0 MPI 80 PS 5G Man £21,240 · 1.0 TSI 95 PS 5G Man £21,790 · 1.0 TSI 116 PS 6G Man £22,290 · 1.0 TSI 116 PS DSG £23,290。
+- **年款**：配置器 id 第三段与 webcache 路径均为 **2027**（配置器法律说明写 current model year）→ 全部 **2027**（不再写官网无年款）。
+- **燃油**：按 engines JSON `fuelName`：**BEV 27 · Gasoline 80 · Diesel 33 · MHEV 21 · PHEV 10**；`Mild hybrid`→MHEV、`Plug-in hybrid`→PHEV。
+- **交付结果**：`Skoda_UK_官网价_20261123.xlsx`，**171 条 / 14 车系**；£21,240–£58,280；年款全 **2027**。
+- **实测**：2026-11-23
+- **来源**：`https://www.skoda.co.uk/new-cars/...-range`；`https://cc.skoda-auto.com/c3popr/v3/GetEnginePricesByTrim`；`https://c3poweb.blob.core.windows.net/webcache/<sv>/GBR/2027/<class>/{trimlines,engines}-en-GB.json`
+- **原文**：`See more SE Edition From* £ 21,240`；`1.0 MPI 80 PS 5G Man`；`1.0 TSI 95 PS 5G Man`；`1.0 TSI 116 PS 6G Man`；`1.0 TSI 116 PS DSG`；`Total price £21,240`
+
+---
+
+### Volvo（UK 英国 `www.volvocars.com/uk`：**真浏览器 build 页；13 个 MY27 车系 65 个 Level × Powertrain 版本；trim+引擎逐行**）✅
+
+- **可达性**：`www.volvocars.com/uk` 裸 curl 常被 Akamai 403；真浏览器正常。`/uk/build/` 一次性列出 13 个 build 入口（EX30/EX90/EX60/EX40/EC40/ES90；XC90 PHEV+MHEV、XC60 PHEV+MHEV、XC40、V60 PHEV+MHEV），每个 build 页给 `Version`（子车型）、`Level`（Core/Plus/Plus Pro/Ultra/Ultra Pro）、`Powertrain` 及价格（2026-11-25）。
+- **★ 取价方式（trim × 动力）**：主表按 `{Level} {Powertrain}` 逐行，价格 = Level 卡基础价 + Powertrain 加价。已实测 EX30 Core 选 `P5 Long Range Electric` 时头部价 £35,585 = 31,385 + 4,200，确认可叠加。`Version` 卡的 `From £` 用于 Black Edition / Cross Country 等子车型。
+- **★ 动力加价**：EX30 `P5 Electric` 标准 / `P5 Long Range Electric +£4,200`；EX90 `Single Motor` 标准 / `Twin Motor +£5,900`；EX60 `P6 Electric` 标准 / `P10 AWD +£3,000` / `P12 AWD +£8,000`；EX40、EC40 `P5 Long Range` 标准 / `P8 AWD +£4,000`；ES90 仅 `Single Motor Extended Range`；XC90/XC60/V60 PHEV 仅 `T8 AWD`；XC90/XC60 MHEV 仅 `B5 AWD`；XC40 仅 `B3`；V60 MHEV 仅 `B4`。
+- **★ 车系/Level 基础价（MY27）**：
+  - EX30：Core 31 385 / Plus 33 485 / Ultra 41 685；Black Edition 38 685；Cross Country 39 260
+  - EX90：Core 73 160 / Plus 80 160 / Ultra 93 860
+  - EX60：Plus 56 860 / Ultra 62 360
+  - EX40：Plus 43 860 / Plus Pro 45 860 / Ultra 47 860 / Ultra Pro 49 860
+  - EC40：Plus Pro 45 860 / Ultra Pro 49 860
+  - ES90：Plus 67 560 / Ultra 77 260
+  - XC90 PHEV：Core 75 765 / Plus 78 265 / Plus Pro 81 765 / Ultra 85 765 / Ultra Pro 89 265 / Black Edition 83 765
+  - XC90 MHEV：Core 56 120 / Plus 58 620 / Plus Pro 63 270 / Ultra 67 270 / Ultra Pro 70 770 / Black Edition 65 270
+  - XC60 PHEV：Core 56 765 / Plus 61 265 / Plus Pro 65 365 / Ultra 70 865 / Black Edition 63 015
+  - XC60 MHEV：Core 42 860 / Plus 48 220 / Plus Pro 52 320 / Ultra 57 420 / Black Edition 49 970
+  - XC40：Core 37 710 / Plus 39 210 / Plus Pro 40 460 / Ultra 44 060 / Ultra Pro 46 760
+  - V60 PHEV：Plus 52 765 / Ultra 57 365
+  - V60 MHEV：Plus 45 210 / Ultra 49 810
+- **年款**：build URL/配置数据为 **MY27**（`my=2027`、`Delivery Mid March 2027`、车型图 2027）→ 年款 2027。
+- **燃油**：EX30/EX90/EX60/EX40/EC40/ES90 = BEV；XC90/XC60/V60 各 PHEV + MHEV 两套；XC40 = MHEV。
+- **交付结果**：`Volvo_UK_官网价_20261125_trim_powertrain.xlsx`（**按用户要求放桌面**；原 `Volvo_UK_官网价_20261125.xlsx` 被 Excel 占用无法覆盖，故用新名），**65 条 / 13 车系**；£31,385–£99,760；BEV 34 · PHEV 13 · MHEV 18；年款 2027。
+- **实测**：2026-11-25
+- **来源**：`https://www.volvocars.com/uk/build/`；`https://www.volvocars.com/uk/build/{ex30-electric,ex90-electric,ex60-electric,ex40-electric,ec40-electric,es90-electric,xc90-hybrid,xc90,xc60-hybrid,xc60,xc40,v60-hybrid,v60}/`
+- **原文**：`Customise your EX30`；`Core £31,385` / `Plus £33,485` / `Ultra £41,685`；`EX30 Black Edition From £38,685`；`EX30 Cross Country From £39,260`；`XC90 Plug-in hybrid From £75,765`；`XC90 Mild hybrid From £56,120`；`P5 Long Range Electric £4,200`；选中后头部 `£35,585`
